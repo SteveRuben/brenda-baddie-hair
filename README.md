@@ -2,6 +2,18 @@
 
 Boutique en ligne de vente de perruques premium, développée en **Next.js 16** (App Router).
 
+## Aperçu
+
+| Accueil | Catalogue |
+|---|---|
+| ![Page d'accueil](docs/screenshots/accueil.png) | ![Catalogue](docs/screenshots/catalogue.png) |
+
+| Fiche produit |
+|---|
+| ![Fiche produit](docs/screenshots/produit.png) |
+
+> Captures générées le 22/09/2026 avec les données de démonstration (photos produits en attente des visuels définitifs).
+
 ## Fonctionnalités
 
 ### Boutique
