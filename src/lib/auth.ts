@@ -27,6 +27,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
+    // La redirection est gérée manuellement dans src/proxy.ts
+    async authorized() {
+      return true;
+    },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;

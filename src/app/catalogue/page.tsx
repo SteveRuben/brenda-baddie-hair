@@ -5,6 +5,7 @@ import CatalogueFilters from "@/components/CatalogueFilters";
 export const dynamic = "force-dynamic";
 
 interface SearchParams {
+  [key: string]: string | undefined;
   q?: string;
   color?: string;
   brand?: string;

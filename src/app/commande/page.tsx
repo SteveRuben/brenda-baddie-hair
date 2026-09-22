@@ -103,11 +103,14 @@ export default function CheckoutPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderId]);
 
+  useEffect(() => {
+    if (items.length === 0 && !orderId) router.push("/panier");
+  }, [items.length, orderId]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const inputCls =
     "w-full rounded-lg border border-neutral-200 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none";
 
   if (items.length === 0 && !orderId) {
-    router.push("/panier");
     return null;
   }
 
