@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Brenda Baddie Hair — E-commerce
 
-## Getting Started
+Boutique en ligne de vente de perruques premium, développée en **Next.js 16** (App Router).
 
-First, run the development server:
+## Fonctionnalités
+
+### Boutique
+- Page d'accueil (hero, produits vedettes)
+- Catalogue avec filtres (recherche, couleur, marque, prix max, tri)
+- Fiche produit (galerie, prix USD + EUR, stock, commande WhatsApp)
+- Panier (localStorage)
+- Commande : informations client + paiement **PayPal** (USD)
+- Page de confirmation avec numéro de commande
+
+### Backoffice (`/admin`)
+- Tableau de bord : CA, commandes, alertes stock
+- Produits : CRUD complet, prix USD/EUR saisis manuellement, upload photos, statuts
+- Commandes : liste, détail, workflow de statut, transporteur + n° de suivi
+- Authentification sécurisée (NextAuth + bcrypt)
+
+## Démarrage
 
 ```bash
+# 1. Installer
+npm install
+
+# 2. Configurer
+cp .env.example .env
+# → renseigner DATABASE_URL, AUTH_SECRET, clés PayPal
+
+# 3. Base de données
+npx prisma db push
+npx prisma db seed
+
+# 4. Lancer
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Compte admin de démo : `admin@brendabaddiehair.com` / `admin123`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Variables d'environnement
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Variable | Description |
+|---|---|
+| `DATABASE_URL` | SQLite local (`file:./dev.db`) ou Postgres en prod |
+| `AUTH_SECRET` | Secret NextAuth (32+ caractères) |
+| `PAYPAL_CLIENT_ID` / `PAYPAL_CLIENT_SECRET` | Clés PayPal (sandbox puis live) |
+| `PAYPAL_MODE` | `sandbox` ou `live` |
+| `NEXT_PUBLIC_PAYPAL_CLIENT_ID` | Clé publique PayPal (bouton front) |
+| `NEXT_PUBLIC_WHATSAPP_NUMBER` | Numéro WhatsApp (bouton commande) |
 
-## Learn More
+## Production
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run build
+npm start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Base Postgres recommandée en production (`DATABASE_URL` pointant vers Postgres,
+`provider = "postgresql"` dans `prisma/schema.prisma`).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Spécifications
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Voir le document de spécifications v1.0 (projet client Brenda S.).
