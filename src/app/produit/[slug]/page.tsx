@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import Price from "@/components/Price";
-import AddToCart from "@/components/AddToCart";
+import { getSetting } from "@/lib/settings";
+import ProductPurchase from "@/components/ProductPurchase";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +18,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
   if (!product || product.status !== "active") notFound();
 
-  const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
+  const whatsapp =
+    (await getSetting("whatsappNumber")) || process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
   const waText = encodeURIComponent(
     `Bonjour Brenda Baddie Hair, je suis intéressée par : ${product.name}`
   );
@@ -57,13 +58,27 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             </p>
           )}
           <h1 className="mt-1 text-3xl font-extrabold">{product.name}</h1>
+
           <div className="mt-3">
-            <Price
-              usd={product.priceUSD}
-              eur={product.priceEUR}
-              compareUSD={product.comparePriceUSD}
-              compareEUR={product.comparePriceEUR}
-              size="lg"
+            <ProductPurchase
+              product={{
+                productId: product.id,
+                name: product.name,
+                slug: product.slug,
+                image: product.images[0]?.url,
+                priceUSD: product.priceUSD,
+                priceEUR: product.priceEUR,
+                comparePriceUSD: product.comparePriceUSD,
+                comparePriceEUR: product.comparePriceEUR,
+                stock: product.stock,
+                variants: product.variants.map((v) => ({
+                  id: v.id,
+                  name: v.name,
+                  priceUSD: v.priceUSD,
+                  priceEUR: v.priceEUR,
+                  stock: v.stock,
+                })),
+              }}
             />
           </div>
 
@@ -90,20 +105,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           </div>
 
           <p className="mt-5 leading-relaxed text-neutral-700">{product.description}</p>
-
-          <div className="mt-6">
-            <AddToCart
-              product={{
-                productId: product.id,
-                name: product.name,
-                slug: product.slug,
-                image: product.images[0]?.url,
-                priceUSD: product.priceUSD,
-                priceEUR: product.priceEUR,
-              }}
-              disabled={product.stock <= 0}
-            />
-          </div>
 
           {whatsapp && (
             <a

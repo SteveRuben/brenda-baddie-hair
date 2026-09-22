@@ -9,7 +9,11 @@ interface SearchParams {
   q?: string;
   color?: string;
   brand?: string;
+  size?: string;
+  minUSD?: string;
   maxUSD?: string;
+  minEUR?: string;
+  maxEUR?: string;
   sort?: string;
 }
 
@@ -23,21 +27,21 @@ export default async function Catalogue({
   if (params.q) where.name = { contains: params.q, mode: "insensitive" };
   if (params.color) where.color = params.color;
   if (params.brand) where.brand = params.brand;
-  if (params.maxUSD) where.priceUSD = { lte: Number(params.maxUSD) };
+  if (params.size) where.size = params.size;
+  if (params.minUSD || params.maxUSD) {
+    where.priceUSD = {
+      ...(params.minUSD ? { gte: Number(params.minUSD) } : {}),
+      ...(params.maxUSD ? { lte: Number(params.maxUSD) } : {}),
+    };
+  }
+  if (params.minEUR || params.maxEUR) {
+    where.priceEUR = {
+      ...(params.minEUR ? { gte: Number(params.minEUR) } : {}),
+      ...(params.maxEUR ? { lte: Number(params.maxEUR) } : {}),
+    };
+  }
 
-  const orderBy =
-    params.sort === "price-asc"
-      ? { priceUSD: "asc" as const }
-      : params.sort === "price-desc"
-        ? { priceUSD: "desc" as const }
-        : { createdAt: "desc" as const };
-
-  const [products, colors, brands] = await Promise.all([
-    prisma.product.findMany({
-      where,
-      orderBy,
-      include: { images: { orderBy: { position: "asc" }, take: 1 } },
-    }),
+  const [colors, brands, sizes] = await Promise.all([
     prisma.product.findMany({
       where: { status: "active" },
       select: { color: true },
@@ -48,7 +52,35 @@ export default async function Catalogue({
       select: { brand: true },
       distinct: ["brand"],
     }),
+    prisma.product.findMany({
+      where: { status: "active" },
+      select: { size: true },
+      distinct: ["size"],
+    }),
   ]);
+
+  const include = { images: { orderBy: { position: "asc" as const }, take: 1 } };
+  let products;
+
+  if (params.sort === "popular") {
+    const sales = await prisma.orderItem.groupBy({
+      by: ["productId"],
+      _sum: { quantity: true },
+      orderBy: { _sum: { quantity: "desc" } },
+    });
+    const rank = new Map(sales.map((s) => [s.productId, s._sum.quantity ?? 0]));
+    const list = await prisma.product.findMany({ where, include });
+    list.sort((a, b) => (rank.get(b.id) ?? 0) - (rank.get(a.id) ?? 0));
+    products = list;
+  } else {
+    const orderBy =
+      params.sort === "price-asc"
+        ? { priceUSD: "asc" as const }
+        : params.sort === "price-desc"
+          ? { priceUSD: "desc" as const }
+          : { createdAt: "desc" as const };
+    products = await prisma.product.findMany({ where, orderBy, include });
+  }
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
@@ -58,6 +90,7 @@ export default async function Catalogue({
       <CatalogueFilters
         colors={colors.map((c) => c.color).filter(Boolean) as string[]}
         brands={brands.map((b) => b.brand).filter(Boolean) as string[]}
+        sizes={sizes.map((s) => s.size).filter(Boolean) as string[]}
         current={params}
       />
 

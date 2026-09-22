@@ -18,6 +18,9 @@ export default function Header() {
           <Link href="/catalogue" className="hover:text-brand-600">
             Catalogue
           </Link>
+          <Link href="/#contact" className="hover:text-brand-600">
+            Contact
+          </Link>
           <Link
             href="/panier"
             className="relative rounded-full bg-brand-600 px-4 py-2 text-white hover:bg-brand-700"

@@ -17,6 +17,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
                 <Link href="/admin" className="hover:text-brand-600">Tableau de bord</Link>
                 <Link href="/admin/produits" className="hover:text-brand-600">Produits</Link>
                 <Link href="/admin/commandes" className="hover:text-brand-600">Commandes</Link>
+                <Link href="/admin/parametres" className="hover:text-brand-600">Paramètres</Link>
+                <Link href="/admin/utilisateurs" className="hover:text-brand-600">Utilisateurs</Link>
                 <Link href="/" className="hover:text-brand-600">Voir le site</Link>
                 <form
                   action={async () => {

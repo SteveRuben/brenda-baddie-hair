@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { capturePaypalOrder } from "@/lib/paypal";
+import { sendOrderConfirmation } from "@/lib/mail";
+import { getSetting } from "@/lib/settings";
 
 export async function POST(req: Request) {
   try {
@@ -10,7 +12,7 @@ export async function POST(req: Request) {
     };
     const order = await prisma.order.findUnique({
       where: { id: orderId },
-      include: { items: true },
+      include: { items: true, customer: true },
     });
     if (!order) return NextResponse.json({ error: "Commande introuvable." }, { status: 404 });
 
@@ -21,7 +23,7 @@ export async function POST(req: Request) {
       await prisma.$transaction([
         prisma.order.update({
           where: { id: orderId },
-          data: { paymentStatus: "paid", status: "paid" },
+          data: { paymentStatus: "paid", status: "confirmed" },
         }),
         ...order.items.map((item) =>
           prisma.product.update({
@@ -30,6 +32,29 @@ export async function POST(req: Request) {
           })
         ),
       ]);
+
+      // Email de confirmation (non bloquant)
+      const siteName = await getSetting("siteName");
+      sendOrderConfirmation({
+        number: order.number,
+        firstName: order.customer.firstName,
+        lastName: order.customer.lastName,
+        email: order.customer.email,
+        items: order.items.map((i) => ({
+          name: i.name,
+          quantity: i.quantity,
+          priceUSD: i.priceUSD,
+          priceEUR: i.priceEUR,
+        })),
+        subtotalUSD: order.subtotalUSD,
+        subtotalEUR: order.subtotalEUR,
+        shippingUSD: order.shippingUSD,
+        shippingEUR: order.shippingEUR,
+        totalUSD: order.totalUSD,
+        totalEUR: order.totalEUR,
+        siteName,
+      }).catch((e) => console.error("[mail]", e));
+
       return NextResponse.json({ number: order.number });
     }
 

@@ -1,15 +1,19 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { getSettings } from "@/lib/settings";
 import ProductCard from "@/components/ProductCard";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const featured = await prisma.product.findMany({
-    where: { status: "active", featured: true },
-    include: { images: { orderBy: { position: "asc" }, take: 1 } },
-    take: 6,
-  });
+  const [featured, settings] = await Promise.all([
+    prisma.product.findMany({
+      where: { status: "active", featured: true },
+      include: { images: { orderBy: { position: "asc" }, take: 1 } },
+      take: 6,
+    }),
+    getSettings(),
+  ]);
 
   return (
     <div>
@@ -17,11 +21,10 @@ export default async function Home() {
       <section className="bg-gradient-to-br from-brand-700 via-brand-600 to-brand-800 text-white">
         <div className="mx-auto max-w-6xl px-4 py-20 text-center">
           <h1 className="text-4xl font-extrabold tracking-tight md:text-6xl">
-            Révèle la baddie en toi
+            {settings.heroTitle}
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-lg text-brand-100">
-            Des perruques premium, une qualité irréprochable et un style qui ne passe
-            jamais inaperçu.
+            {settings.heroSubtitle}
           </p>
           <Link
             href="/catalogue"
@@ -51,6 +54,12 @@ export default async function Home() {
             ))}
           </div>
         )}
+      </section>
+
+      {/* À propos */}
+      <section className="mx-auto max-w-6xl px-4 py-14">
+        <h2 className="text-2xl font-extrabold">{settings.aboutTitle}</h2>
+        <p className="mt-3 max-w-3xl leading-relaxed text-neutral-600">{settings.aboutText}</p>
       </section>
 
       {/* Arguments */}

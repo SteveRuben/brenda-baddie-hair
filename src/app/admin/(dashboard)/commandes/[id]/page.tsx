@@ -33,8 +33,15 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
             </>
           )}
           <br />
-          {order.customer.address}, {order.customer.city} {order.customer.country}
+          {order.customer.address}
+          {order.customer.postalCode && `, ${order.customer.postalCode}`}
+          {order.customer.city && `, ${order.customer.city}`} {order.customer.country}
         </p>
+        {order.notes && (
+          <p className="mt-3 rounded-lg bg-brand-50 p-3 text-sm">
+            <span className="font-semibold">Instructions :</span> {order.notes}
+          </p>
+        )}
       </div>
 
       <div className="mt-4 rounded-2xl bg-white p-6 shadow-sm">
@@ -50,6 +57,12 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
               </span>
             </div>
           ))}
+          <div className="flex justify-between text-sm">
+            <span>Livraison</span>
+            <span className="font-semibold">
+              {formatUSD(order.shippingUSD)} / {formatEUR(order.shippingEUR)}
+            </span>
+          </div>
           <div className="flex justify-between border-t border-neutral-100 pt-3 font-extrabold">
             <span>Total</span>
             <span className="text-brand-700">

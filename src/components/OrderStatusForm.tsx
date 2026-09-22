@@ -3,7 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const STATUSES = ["pending", "paid", "preparing", "shipped", "delivered", "cancelled"];
+const STATUSES = [
+  { value: "pending", label: "En attente" },
+  { value: "confirmed", label: "Confirmée" },
+  { value: "shipped", label: "Expédiée" },
+  { value: "delivered", label: "Livrée" },
+  { value: "cancelled", label: "Annulée" },
+];
 
 export default function OrderStatusForm({
   orderId,
@@ -52,8 +58,8 @@ export default function OrderStatusForm({
           onChange={(e) => setForm({ ...form, status: e.target.value })}
         >
           {STATUSES.map((s) => (
-            <option key={s} value={s}>
-              {s}
+            <option key={s.value} value={s.value}>
+              {s.label}
             </option>
           ))}
         </select>

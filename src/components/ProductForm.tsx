@@ -4,6 +4,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { slugify } from "@/lib/format";
 
+interface VariantInput {
+  name: string;
+  priceUSD: string;
+  priceEUR: string;
+  stock: string;
+}
+
 interface ProductFormData {
   id?: string;
   name: string;
@@ -20,6 +27,7 @@ interface ProductFormData {
   status: string;
   featured: boolean;
   images: string[];
+  variants: VariantInput[];
 }
 
 const EMPTY: ProductFormData = {
@@ -37,6 +45,7 @@ const EMPTY: ProductFormData = {
   status: "draft",
   featured: false,
   images: [],
+  variants: [],
 };
 
 export default function ProductForm({ initial }: { initial?: Partial<ProductFormData> }) {
@@ -81,6 +90,14 @@ export default function ProductForm({ initial }: { initial?: Partial<ProductForm
         comparePriceUSD: form.comparePriceUSD ? Number(form.comparePriceUSD) : null,
         comparePriceEUR: form.comparePriceEUR ? Number(form.comparePriceEUR) : null,
         stock: Number(form.stock),
+        variants: form.variants
+          .filter((v) => v.name.trim() !== "")
+          .map((v) => ({
+            name: v.name.trim(),
+            priceUSD: v.priceUSD !== "" ? Number(v.priceUSD) : null,
+            priceEUR: v.priceEUR !== "" ? Number(v.priceEUR) : null,
+            stock: Number(v.stock || 0),
+          })),
       };
       const url = form.id ? `/api/admin/products/${form.id}` : "/api/admin/products";
       const res = await fetch(url, {
@@ -196,6 +213,84 @@ export default function ProductForm({ initial }: { initial?: Partial<ProductForm
             {uploading ? "…" : "+"}
             <input type="file" accept="image/*" multiple className="hidden" onChange={upload} />
           </label>
+        </div>
+      </div>
+
+      <div className="mt-6">
+        <p className={labelCls}>Variantes (optionnel — ex. couleur, taille)</p>
+        <p className="mt-1 text-xs text-neutral-500">
+          Laissez les prix vides pour utiliser le prix de base du produit.
+        </p>
+        <div className="mt-2 space-y-2">
+          {form.variants.map((v, i) => (
+            <div key={i} className="grid grid-cols-12 items-center gap-2">
+              <input
+                className={`${inputCls} col-span-4`}
+                placeholder="Nom (ex. 22 pouces)"
+                value={v.name}
+                onChange={(e) => {
+                  const variants = [...form.variants];
+                  variants[i] = { ...variants[i], name: e.target.value };
+                  set("variants", variants);
+                }}
+              />
+              <input
+                className={`${inputCls} col-span-2`}
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="$"
+                value={v.priceUSD}
+                onChange={(e) => {
+                  const variants = [...form.variants];
+                  variants[i] = { ...variants[i], priceUSD: e.target.value };
+                  set("variants", variants);
+                }}
+              />
+              <input
+                className={`${inputCls} col-span-2`}
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="€"
+                value={v.priceEUR}
+                onChange={(e) => {
+                  const variants = [...form.variants];
+                  variants[i] = { ...variants[i], priceEUR: e.target.value };
+                  set("variants", variants);
+                }}
+              />
+              <input
+                className={`${inputCls} col-span-3`}
+                type="number"
+                min="0"
+                placeholder="Stock"
+                value={v.stock}
+                onChange={(e) => {
+                  const variants = [...form.variants];
+                  variants[i] = { ...variants[i], stock: e.target.value };
+                  set("variants", variants);
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => set("variants", form.variants.filter((_, j) => j !== i))}
+                className="col-span-1 text-xl font-bold text-red-600 hover:text-red-800"
+                aria-label="Supprimer la variante"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={() =>
+              set("variants", [...form.variants, { name: "", priceUSD: "", priceEUR: "", stock: "0" }])
+            }
+            className="rounded-full border border-brand-300 px-4 py-2 text-sm font-bold text-brand-700 hover:bg-brand-50"
+          >
+            + Ajouter une variante
+          </button>
         </div>
       </div>
 

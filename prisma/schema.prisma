@@ -74,6 +74,7 @@ model Customer {
   phone     String?
   address   String?
   city      String?
+  postalCode String?
   country   String?
   orders    Order[]
   createdAt DateTime @default(now())

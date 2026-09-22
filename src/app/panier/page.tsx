@@ -1,11 +1,20 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/lib/cart";
 import { formatUSD, formatEUR } from "@/lib/format";
 
 export default function CartPage() {
   const { items, updateQuantity, removeItem, subtotalUSD, subtotalEUR } = useCart();
+  const [shipping, setShipping] = useState({ usd: 0, eur: 0 });
+
+  useEffect(() => {
+    fetch("/api/public/settings")
+      .then((r) => r.json())
+      .then((d) => setShipping({ usd: d.shippingFeeUSD ?? 0, eur: d.shippingFeeEUR ?? 0 }))
+      .catch(() => {});
+  }, []);
 
   if (items.length === 0) {
     return (
@@ -74,13 +83,24 @@ export default function CartPage() {
       </div>
 
       <div className="mt-8 rounded-2xl bg-brand-50 p-6">
-        <div className="flex justify-between text-lg font-extrabold">
+        <div className="flex justify-between text-sm">
           <span>Sous-total</span>
-          <span className="text-brand-700">
+          <span className="font-semibold">
             {formatUSD(subtotalUSD)} / {formatEUR(subtotalEUR)}
           </span>
         </div>
-        <p className="mt-1 text-sm text-neutral-500">Frais de livraison calculés à la commande.</p>
+        <div className="mt-1 flex justify-between text-sm">
+          <span>Livraison</span>
+          <span className="font-semibold">
+            {formatUSD(shipping.usd)} / {formatEUR(shipping.eur)}
+          </span>
+        </div>
+        <div className="mt-3 flex justify-between border-t border-brand-100 pt-3 text-lg font-extrabold">
+          <span>Total estimé</span>
+          <span className="text-brand-700">
+            {formatUSD(subtotalUSD + shipping.usd)} / {formatEUR(subtotalEUR + shipping.eur)}
+          </span>
+        </div>
         <Link
           href="/commande"
           className="mt-4 block rounded-full bg-brand-600 py-3 text-center font-bold text-white hover:bg-brand-700"

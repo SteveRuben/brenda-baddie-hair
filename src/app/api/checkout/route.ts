@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getSetting } from "@/lib/settings";
 
 function orderNumber(): string {
   const year = new Date().getFullYear();
@@ -23,7 +24,9 @@ export async function POST(req: Request) {
         phone?: string;
         address?: string;
         city?: string;
+        postalCode?: string;
         country?: string;
+        notes?: string;
       };
       items: CheckoutItem[];
     };
@@ -92,9 +95,13 @@ export async function POST(req: Request) {
         phone: customer.phone,
         address: customer.address,
         city: customer.city,
+        postalCode: customer.postalCode,
         country: customer.country,
       },
     });
+
+    const shippingUSD = Number(await getSetting("shippingFeeUSD")) || 0;
+    const shippingEUR = Number(await getSetting("shippingFeeEUR")) || 0;
 
     const order = await prisma.order.create({
       data: {
@@ -103,10 +110,13 @@ export async function POST(req: Request) {
         items: { create: orderItems },
         subtotalUSD,
         subtotalEUR,
-        totalUSD: subtotalUSD,
-        totalEUR: subtotalEUR,
+        shippingUSD,
+        shippingEUR,
+        totalUSD: subtotalUSD + shippingUSD,
+        totalEUR: subtotalEUR + shippingEUR,
         status: "pending",
         paymentStatus: "pending",
+        notes: customer.notes || null,
       },
     });
 

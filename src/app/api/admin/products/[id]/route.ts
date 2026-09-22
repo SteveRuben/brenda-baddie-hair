@@ -13,6 +13,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
   try {
     const data = await req.json();
     await prisma.productImage.deleteMany({ where: { productId: id } });
+    await prisma.variant.deleteMany({ where: { productId: id } });
     const product = await prisma.product.update({
       where: { id },
       data: {
@@ -31,6 +32,16 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
         featured: Boolean(data.featured),
         images: {
           create: (data.images ?? []).map((url: string, i: number) => ({ url, position: i })),
+        },
+        variants: {
+          create: (data.variants ?? []).map(
+            (v: { name: string; priceUSD: number | null; priceEUR: number | null; stock: number }) => ({
+              name: v.name,
+              priceUSD: v.priceUSD,
+              priceEUR: v.priceEUR,
+              stock: Number(v.stock ?? 0),
+            })
+          ),
         },
       },
     });

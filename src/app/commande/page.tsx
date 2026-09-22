@@ -21,8 +21,21 @@ export default function CheckoutPage() {
     phone: "",
     address: "",
     city: "",
+    postalCode: "",
     country: "",
+    notes: "",
   });
+  const [shipping, setShipping] = useState({ usd: 0, eur: 0 });
+
+  useEffect(() => {
+    fetch("/api/public/settings")
+      .then((r) => r.json())
+      .then((d) => setShipping({ usd: d.shippingFeeUSD ?? 0, eur: d.shippingFeeEUR ?? 0 }))
+      .catch(() => {});
+  }, []);
+
+  const totalUSD = subtotalUSD + shipping.usd;
+  const totalEUR = subtotalEUR + shipping.eur;
 
   function set<K extends keyof typeof form>(key: K, value: string) {
     setForm((f) => ({ ...f, [key]: value }));
@@ -133,7 +146,9 @@ export default function CheckoutPage() {
               <input className={inputCls + " col-span-2"} placeholder="Téléphone" value={form.phone} onChange={(e) => set("phone", e.target.value)} />
               <input className={inputCls + " col-span-2"} placeholder="Adresse" value={form.address} onChange={(e) => set("address", e.target.value)} />
               <input className={inputCls} placeholder="Ville" value={form.city} onChange={(e) => set("city", e.target.value)} />
-              <input className={inputCls} placeholder="Pays" value={form.country} onChange={(e) => set("country", e.target.value)} />
+              <input className={inputCls} placeholder="Code postal" value={form.postalCode} onChange={(e) => set("postalCode", e.target.value)} />
+              <input className={inputCls + " col-span-2"} placeholder="Pays" value={form.country} onChange={(e) => set("country", e.target.value)} />
+              <textarea className={inputCls + " col-span-2"} placeholder="Instructions particulières (optionnel)" rows={3} value={form.notes} onChange={(e) => set("notes", e.target.value)} />
             </div>
           </div>
           <div>
@@ -147,10 +162,18 @@ export default function CheckoutPage() {
                   <span className="font-semibold">{formatUSD(i.priceUSD * i.quantity)}</span>
                 </div>
               ))}
+              <div className="flex justify-between border-t border-brand-100 pt-3 text-sm">
+                <span>Sous-total</span>
+                <span className="font-semibold">{formatUSD(subtotalUSD)} / {formatEUR(subtotalEUR)}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span>Livraison</span>
+                <span className="font-semibold">{formatUSD(shipping.usd)} / {formatEUR(shipping.eur)}</span>
+              </div>
               <div className="flex justify-between border-t border-brand-100 pt-3 font-extrabold">
                 <span>Total</span>
                 <span className="text-brand-700">
-                  {formatUSD(subtotalUSD)} / {formatEUR(subtotalEUR)}
+                  {formatUSD(totalUSD)} / {formatEUR(totalEUR)}
                 </span>
               </div>
             </div>
@@ -167,7 +190,7 @@ export default function CheckoutPage() {
         <div className="mt-6 max-w-md">
           <h2 className="font-bold">Paiement sécurisé via PayPal</h2>
           <p className="mt-1 text-sm text-neutral-500">
-            Total à payer : {formatUSD(subtotalUSD)} / {formatEUR(subtotalEUR)}
+            Total à payer : {formatUSD(totalUSD)} / {formatEUR(totalEUR)}
           </p>
           {!PAYPAL_CLIENT_ID && (
             <p className="mt-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-800">

@@ -1,11 +1,62 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { formatUSD, formatEUR } from "@/lib/format";
+import OrdersFilters from "@/components/OrdersFilters";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminOrders() {
+interface SearchParams {
+  [key: string]: string | undefined;
+  q?: string;
+  status?: string;
+  payment?: string;
+  from?: string;
+  to?: string;
+}
+
+const STATUS_LABELS: Record<string, string> = {
+  pending: "En attente",
+  confirmed: "Confirmée",
+  shipped: "Expédiée",
+  delivered: "Livrée",
+  cancelled: "Annulée",
+};
+
+const PAYMENT_LABELS: Record<string, string> = {
+  pending: "En attente",
+  paid: "Payé",
+  failed: "Échoué",
+  refunded: "Remboursé",
+};
+
+export default async function AdminOrders({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
+  const params = await searchParams;
+  const where: Record<string, unknown> = {};
+
+  if (params.status) where.status = params.status;
+  if (params.payment) where.paymentStatus = params.payment;
+  if (params.from || params.to) {
+    where.createdAt = {
+      ...(params.from ? { gte: new Date(params.from) } : {}),
+      ...(params.to ? { lte: new Date(`${params.to}T23:59:59`) } : {}),
+    };
+  }
+  if (params.q) {
+    const q = params.q;
+    where.OR = [
+      { number: { contains: q } },
+      { customer: { firstName: { contains: q } } },
+      { customer: { lastName: { contains: q } } },
+      { customer: { email: { contains: q } } },
+    ];
+  }
+
   const orders = await prisma.order.findMany({
+    where,
     orderBy: { createdAt: "desc" },
     include: { customer: true },
   });
@@ -13,6 +64,7 @@ export default async function AdminOrders() {
   return (
     <div>
       <h1 className="text-2xl font-extrabold">Commandes ({orders.length})</h1>
+      <OrdersFilters current={params} />
       <div className="mt-6 overflow-x-auto rounded-2xl bg-white shadow-sm">
         <table className="w-full text-sm">
           <thead>
@@ -36,8 +88,8 @@ export default async function AdminOrders() {
                 <td className="p-4 font-semibold">
                   {formatUSD(o.totalUSD)} / {formatEUR(o.totalEUR)}
                 </td>
-                <td className="p-4">{o.paymentStatus}</td>
-                <td className="p-4">{o.status}</td>
+                <td className="p-4">{PAYMENT_LABELS[o.paymentStatus] ?? o.paymentStatus}</td>
+                <td className="p-4">{STATUS_LABELS[o.status] ?? o.status}</td>
                 <td className="p-4 text-neutral-500">
                   {new Date(o.createdAt).toLocaleDateString("fr-FR")}
                 </td>

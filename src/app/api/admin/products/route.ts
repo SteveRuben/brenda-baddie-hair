@@ -41,6 +41,16 @@ export async function POST(req: Request) {
         images: {
           create: (data.images ?? []).map((url: string, i: number) => ({ url, position: i })),
         },
+        variants: {
+          create: (data.variants ?? []).map(
+            (v: { name: string; priceUSD: number | null; priceEUR: number | null; stock: number }) => ({
+              name: v.name,
+              priceUSD: v.priceUSD,
+              priceEUR: v.priceEUR,
+              stock: Number(v.stock ?? 0),
+            })
+          ),
+        },
       },
     });
     return NextResponse.json(product, { status: 201 });
