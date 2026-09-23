@@ -12,6 +12,16 @@ Boutique en ligne de vente de perruques premium, développée en **Next.js 16** 
 |---|---|
 | ![Fiche produit](docs/screenshots/produit.png) | ![Mini-panier à l'ajout](docs/screenshots/panier-drawer.png) |
 
+### Backoffice (`/admin`)
+
+| Tableau de bord | Produits |
+|---|---|
+| ![Tableau de bord admin](docs/screenshots/admin-dashboard.png) | ![Gestion des produits](docs/screenshots/admin-produits.png) |
+
+| Commandes |
+|---|
+| ![Gestion des commandes](docs/screenshots/admin-commandes.png) |
+
 > Captures générées le 23/09/2026 avec les données de démonstration (photos produits en attente des visuels définitifs).
 
 ## Fonctionnalités

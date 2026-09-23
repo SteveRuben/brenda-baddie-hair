@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { useCart } from "@/lib/cart";
-import { formatUSD, formatEUR } from "@/lib/format";
+import { useCurrency } from "@/lib/currency";
 
 export function BagIcon({ className = "h-5 w-5" }: { className?: string }) {
   return (
@@ -57,6 +57,7 @@ export default function CartDrawer() {
     updateQuantity,
     removeItem,
   } = useCart();
+  const { format } = useCurrency();
 
   useEffect(() => {
     if (!isOpen) return;
@@ -155,7 +156,7 @@ export default function CartDrawer() {
                       {item.name}
                     </Link>
                     <p className="mt-0.5 text-xs text-neutral-500">
-                      {formatUSD(item.priceUSD)} / {formatEUR(item.priceEUR)}
+                      {format(item.priceUSD, item.priceEUR)}
                     </p>
                     <div className="mt-2 flex items-center gap-2">
                       <button
@@ -199,7 +200,7 @@ export default function CartDrawer() {
                     </div>
                   </div>
                   <p className="shrink-0 text-sm font-extrabold text-brand-700">
-                    {formatUSD(item.priceUSD * item.quantity)}
+                    {format(item.priceUSD * item.quantity, item.priceEUR * item.quantity)}
                   </p>
                 </div>
               ))}
@@ -208,7 +209,7 @@ export default function CartDrawer() {
               <div className="flex justify-between text-sm">
                 <span className="text-neutral-500">Sous-total</span>
                 <span className="font-extrabold text-brand-700">
-                  {formatUSD(subtotalUSD)} / {formatEUR(subtotalEUR)}
+                  {format(subtotalUSD, subtotalEUR)}
                 </span>
               </div>
               <Link

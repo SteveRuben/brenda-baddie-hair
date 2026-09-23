@@ -3,12 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart";
-import { formatUSD, formatEUR } from "@/lib/format";
+import { useCurrency } from "@/lib/currency";
 
 const PAYPAL_CLIENT_ID = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID ?? "";
 
 export default function CheckoutPage() {
   const { items, subtotalUSD, subtotalEUR, clear } = useCart();
+  const { format } = useCurrency();
   const router = useRouter();
   const paypalRef = useRef<HTMLDivElement>(null);
   const [orderId, setOrderId] = useState<string | null>(null);
@@ -178,21 +179,21 @@ export default function CheckoutPage() {
                   <span>
                     {i.name} × {i.quantity}
                   </span>
-                  <span className="font-semibold">{formatUSD(i.priceUSD * i.quantity)}</span>
+                  <span className="font-semibold">{format(i.priceUSD * i.quantity, i.priceEUR * i.quantity)}</span>
                 </div>
               ))}
               <div className="flex justify-between border-t border-brand-100 pt-3 text-sm">
                 <span>Sous-total</span>
-                <span className="font-semibold">{formatUSD(subtotalUSD)} / {formatEUR(subtotalEUR)}</span>
+                <span className="font-semibold">{format(subtotalUSD, subtotalEUR)}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span>Livraison</span>
-                <span className="font-semibold">{formatUSD(shipping.usd)} / {formatEUR(shipping.eur)}</span>
+                <span className="font-semibold">{format(shipping.usd, shipping.eur)}</span>
               </div>
               <div className="flex justify-between border-t border-brand-100 pt-3 font-extrabold">
                 <span>Total</span>
                 <span className="text-brand-700">
-                  {formatUSD(totalUSD)} / {formatEUR(totalEUR)}
+                  {format(totalUSD, totalEUR)}
                 </span>
               </div>
             </div>
@@ -209,7 +210,7 @@ export default function CheckoutPage() {
         <div className="mt-6 max-w-md">
           <h2 className="font-bold">Paiement sécurisé via PayPal</h2>
           <p className="mt-1 text-sm text-neutral-500">
-            Total à payer : {formatUSD(totalUSD)} / {formatEUR(totalEUR)}
+            Total à payer : {format(totalUSD, totalEUR)}
           </p>
           {!PAYPAL_CLIENT_ID && (
             <p className="mt-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-800">

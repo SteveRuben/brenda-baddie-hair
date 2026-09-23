@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/lib/cart";
-import { formatUSD, formatEUR } from "@/lib/format";
+import { useCurrency } from "@/lib/currency";
 
 export default function CartPage() {
   const { items, updateQuantity, removeItem, subtotalUSD, subtotalEUR } = useCart();
+  const { format } = useCurrency();
   const [shipping, setShipping] = useState({ usd: 0, eur: 0 });
 
   useEffect(() => {
@@ -51,7 +52,7 @@ export default function CartPage() {
                 {item.name}
               </Link>
               <p className="text-sm text-neutral-500">
-                {formatUSD(item.priceUSD)} / {formatEUR(item.priceEUR)}
+                {format(item.priceUSD, item.priceEUR)}
               </p>
               <div className="mt-2 flex items-center gap-3">
                 <button
@@ -76,7 +77,7 @@ export default function CartPage() {
               </div>
             </div>
             <p className="font-extrabold text-brand-700">
-              {formatUSD(item.priceUSD * item.quantity)}
+              {format(item.priceUSD * item.quantity, item.priceEUR * item.quantity)}
             </p>
           </div>
         ))}
@@ -86,19 +87,19 @@ export default function CartPage() {
         <div className="flex justify-between text-sm">
           <span>Sous-total</span>
           <span className="font-semibold">
-            {formatUSD(subtotalUSD)} / {formatEUR(subtotalEUR)}
+            {format(subtotalUSD, subtotalEUR)}
           </span>
         </div>
         <div className="mt-1 flex justify-between text-sm">
           <span>Livraison</span>
           <span className="font-semibold">
-            {formatUSD(shipping.usd)} / {formatEUR(shipping.eur)}
+            {format(shipping.usd, shipping.eur)}
           </span>
         </div>
         <div className="mt-3 flex justify-between border-t border-brand-100 pt-3 text-lg font-extrabold">
           <span>Total estimé</span>
           <span className="text-brand-700">
-            {formatUSD(subtotalUSD + shipping.usd)} / {formatEUR(subtotalEUR + shipping.eur)}
+            {format(subtotalUSD + shipping.usd, subtotalEUR + shipping.eur)}
           </span>
         </div>
         <Link

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
 import { CartProvider } from "@/lib/cart";
+import { CurrencyProvider } from "@/lib/currency";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
@@ -19,11 +20,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <SessionProvider>
           <CartProvider>
+            <CurrencyProvider>
             <Header />
             <main className="min-h-[70vh]">{children}</main>
             <Footer />
             <CartDrawer />
             <WhatsappChat />
+            </CurrencyProvider>
           </CartProvider>
         </SessionProvider>
       </body>
