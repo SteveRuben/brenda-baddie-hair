@@ -12,7 +12,7 @@ export default function ProductGallery({
   productName: string;
 }) {
   const [selected, setSelected] = useState(0);
-  const list = images.length > 0 ? images : [{ id: "placeholder", url: "/images/placeholder.png", alt: productName }];
+  const list = images.length > 0 ? images : [{ id: "placeholder", url: "/images/placeholder.svg", alt: productName }];
   const current = list[Math.min(selected, list.length - 1)];
 
   return (

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart";
 import Price from "./Price";
 
@@ -29,7 +28,6 @@ interface ProductInfo {
 
 export default function ProductPurchase({ product }: { product: ProductInfo }) {
   const { addItem } = useCart();
-  const router = useRouter();
   const [variantId, setVariantId] = useState<string>("");
   const [quantity, setQuantity] = useState(1);
 
@@ -52,7 +50,7 @@ export default function ProductPurchase({ product }: { product: ProductInfo }) {
       },
       quantity
     );
-    router.push("/panier");
+    // Le mini-panier s'ouvre automatiquement via addItem : pas de redirection.
   }
 
   const btnCls =

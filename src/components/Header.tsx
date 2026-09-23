@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { useCart } from "@/lib/cart";
+import { BagIcon } from "./CartDrawer";
 
 export default function Header() {
-  const { count } = useCart();
+  const { count, openCart } = useCart();
   const { data: session } = useSession();
   const role = (session?.user as { role?: string } | undefined)?.role;
   const isCustomer = role === "customer";
@@ -43,17 +44,18 @@ export default function Header() {
               {isLoggedIn ? "Mon compte" : "Se connecter"}
             </Link>
           )}
-          <Link
-            href="/panier"
-            className="relative rounded-full bg-brand-600 px-4 py-2 text-white hover:bg-brand-700"
+          <button
+            type="button"
+            onClick={openCart}
+            aria-label={`Ouvrir le panier, ${count} article${count > 1 ? "s" : ""}`}
+            title="Panier"
+            className="relative rounded-full bg-brand-600 p-3 text-white transition hover:bg-brand-700"
           >
-            Panier
-            {count > 0 && (
-              <span className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-brand-800 text-xs font-bold">
-                {count}
-              </span>
-            )}
-          </Link>
+            <BagIcon className="h-5 w-5" />
+            <span className="absolute -right-1.5 -top-1.5 flex h-6 min-w-6 items-center justify-center rounded-full bg-white px-1.5 text-xs font-extrabold text-brand-700 shadow ring-2 ring-brand-600">
+              {count}
+            </span>
+          </button>
         </nav>
       </div>
     </header>

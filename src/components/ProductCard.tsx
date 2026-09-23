@@ -14,7 +14,7 @@ export interface CardProduct {
 }
 
 export default function ProductCard({ product }: { product: CardProduct }) {
-  const image = product.images[0]?.url ?? "/images/placeholder.png";
+  const image = product.images[0]?.url ?? "/images/placeholder.svg";
   return (
     <Link
       href={`/produit/${product.slug}`}

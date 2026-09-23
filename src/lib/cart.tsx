@@ -25,6 +25,9 @@ interface CartContextValue {
   count: number;
   subtotalUSD: number;
   subtotalEUR: number;
+  isOpen: boolean;
+  openCart: () => void;
+  closeCart: () => void;
   addItem: (item: Omit<CartItem, "quantity">, quantity?: number) => void;
   removeItem: (productId: string, variantId?: string) => void;
   updateQuantity: (productId: string, variantId: string | undefined, quantity: number) => void;
@@ -40,6 +43,7 @@ function keyOf(productId: string, variantId?: string) {
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     try {
@@ -67,6 +71,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
       count,
       subtotalUSD,
       subtotalEUR,
+      isOpen,
+      openCart() {
+        setIsOpen(true);
+      },
+      closeCart() {
+        setIsOpen(false);
+      },
       addItem(item, quantity = 1) {
         setItems((prev) => {
           const k = keyOf(item.productId, item.variantId);
@@ -80,6 +91,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
           }
           return [...prev, { ...item, quantity }];
         });
+        // Ouvre le mini-panier pour montrer l'article ajouté (avec son visuel),
+        // comme sur les sites e-commerce classiques.
+        setIsOpen(true);
       },
       removeItem(productId, variantId) {
         const k = keyOf(productId, variantId);
@@ -99,7 +113,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         setItems([]);
       },
     };
-  }, [items]);
+  }, [items, isOpen]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

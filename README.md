@@ -8,11 +8,11 @@ Boutique en ligne de vente de perruques premium, développée en **Next.js 16** 
 |---|---|
 | ![Page d'accueil](docs/screenshots/accueil.png) | ![Catalogue](docs/screenshots/catalogue.png) |
 
-| Fiche produit |
-|---|
-| ![Fiche produit](docs/screenshots/produit.png) |
+| Fiche produit | Mini-panier |
+|---|---|
+| ![Fiche produit](docs/screenshots/produit.png) | ![Mini-panier à l'ajout](docs/screenshots/panier-drawer.png) |
 
-> Captures générées le 22/09/2026 avec les données de démonstration (photos produits en attente des visuels définitifs).
+> Captures générées le 23/09/2026 avec les données de démonstration (photos produits en attente des visuels définitifs).
 
 ## Fonctionnalités
 
