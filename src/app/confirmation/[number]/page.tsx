@@ -52,6 +52,13 @@ export default async function ConfirmationPage({
       >
         Continuer mes achats
       </Link>
+      <p className="mt-4 text-sm text-neutral-500">
+        Un souci avec votre commande ? Consultez notre{" "}
+        <Link href="/retours" className="font-semibold text-brand-700 hover:underline">
+          politique de retours
+        </Link>
+        .
+      </p>
     </div>
   );
 }

@@ -15,6 +15,7 @@ export const SETTING_DEFAULTS: Record<string, string> = {
   whatsappNumber: "",
   whatsappChatEnabled: "true",
   whatsappChatMessage: "Bonjour Brenda Baddie Hair, j'ai une question !",
+  contactEmail: "",
   shippingFeeUSD: "0",
   shippingFeeEUR: "0",
   legalMentions: "",

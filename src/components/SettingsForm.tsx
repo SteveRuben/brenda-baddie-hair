@@ -15,6 +15,7 @@ const FIELDS: { key: string; label: string; type: "text" | "textarea" | "number"
   { key: "whatsappNumber", label: "Numéro WhatsApp (format international, ex. 14165551234)", type: "text" },
   { key: "whatsappChatEnabled", label: "Afficher la bulle de discussion WhatsApp", type: "checkbox" },
   { key: "whatsappChatMessage", label: "Message pré-rempli de la bulle WhatsApp", type: "textarea" },
+  { key: "contactEmail", label: "Email de contact", type: "text" },
   { key: "shippingFeeUSD", label: "Frais de livraison — USD", type: "number" },
   { key: "shippingFeeEUR", label: "Frais de livraison — EUR", type: "number" },
   { key: "legalMentions", label: "Mentions légales", type: "textarea" },
