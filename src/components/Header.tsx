@@ -3,40 +3,7 @@
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { useCart } from "@/lib/cart";
-import { useCurrency, type Currency } from "@/lib/currency";
 import { BagIcon } from "./CartDrawer";
-
-function CurrencyToggle() {
-  const { currency, setCurrency } = useCurrency();
-  const options: { value: Currency; label: string }[] = [
-    { value: "USD", label: "$ USD" },
-    { value: "EUR", label: "€ EUR" },
-  ];
-  return (
-    <div
-      className="flex items-center rounded-full bg-white/15 p-0.5 text-xs font-bold"
-      role="group"
-      aria-label="Devise d'affichage"
-      title="Devise détectée selon votre zone géographique"
-    >
-      {options.map((o) => (
-        <button
-          key={o.value}
-          type="button"
-          onClick={() => setCurrency(o.value)}
-          aria-pressed={currency === o.value}
-          className={`rounded-full px-2.5 py-1 transition ${
-            currency === o.value
-              ? "bg-white text-brand-700 shadow"
-              : "text-white/80 hover:text-white"
-          }`}
-        >
-          {o.label}
-        </button>
-      ))}
-    </div>
-  );
-}
 
 export default function Header() {
   const { count, openCart } = useCart();
@@ -46,9 +13,9 @@ export default function Header() {
   const isLoggedIn = !!session?.user;
   return (
     <div className="sticky top-0 z-40">
-      {/* Barre utilitaire au-dessus du header : panier à gauche */}
+      {/* Barre utilitaire au-dessus du header : panier à droite */}
       <div className="bg-brand-700 text-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-1.5">
+        <div className="mx-auto flex max-w-6xl items-center justify-end px-4 py-1.5">
           <button
             type="button"
             onClick={openCart}
@@ -66,7 +33,6 @@ export default function Header() {
               Panier
             </span>
           </button>
-          <CurrencyToggle />
         </div>
       </div>
       <header className="border-b border-brand-100 bg-white/95 backdrop-blur">

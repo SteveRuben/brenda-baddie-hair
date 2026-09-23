@@ -13,19 +13,19 @@ export type Currency = "EUR" | "USD";
 
 interface CurrencyContextValue {
   currency: Currency;
-  setCurrency: (c: Currency) => void;
   /** Formate un prix dans la devise active (EUR en Europe, USD ailleurs). */
   format: (usd: number, eur: number) => string;
 }
 
 const CurrencyContext = createContext<CurrencyContextValue | null>(null);
-const STORAGE_KEY = "bbh-currency";
 
 /**
- * Détection géographique simple, sans appel réseau : si le fuseau horaire
- * du visiteur est européen, on affiche les prix en euros, sinon en dollars.
+ * Détection géographique du visiteur :
+ * 1. immédiate via le fuseau horaire (Europe/ → EUR),
+ * 2. affinée via la géolocalisation de son IP (continent EU → EUR).
+ * Sans sélecteur manuel : la devise suit toujours la zone du visiteur.
  */
-function detectCurrency(): Currency {
+function detectFromTimezone(): Currency {
   try {
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone ?? "";
     if (tz.startsWith("Europe/")) return "EUR";
@@ -35,34 +35,36 @@ function detectCurrency(): Currency {
   return "USD";
 }
 
+async function detectFromIP(signal: AbortSignal): Promise<Currency | null> {
+  try {
+    const res = await fetch("https://ipwho.is/", { signal });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (typeof data?.continent_code !== "string") return null;
+    return data.continent_code === "EU" ? "EUR" : "USD";
+  } catch {
+    return null;
+  }
+}
+
 export function CurrencyProvider({ children }: { children: ReactNode }) {
   // USD par défaut pour éviter tout décalage d'hydratation ;
   // la vraie devise est détectée au montage côté client.
-  const [currency, setCurrencyState] = useState<Currency>("USD");
+  const [currency, setCurrency] = useState<Currency>("USD");
 
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved === "EUR" || saved === "USD") {
-        setCurrencyState(saved);
-        return;
-      }
-    } catch {
-      /* stockage indisponible */
-    }
-    setCurrencyState(detectCurrency());
+    const controller = new AbortController();
+    // Réponse immédiate via le fuseau horaire…
+    setCurrency(detectFromTimezone());
+    // …puis affinement via l'IP du visiteur.
+    detectFromIP(controller.signal).then((c) => {
+      if (c) setCurrency(c);
+    });
+    return () => controller.abort();
   }, []);
 
   const value: CurrencyContextValue = {
     currency,
-    setCurrency(c: Currency) {
-      setCurrencyState(c);
-      try {
-        localStorage.setItem(STORAGE_KEY, c);
-      } catch {
-        /* stockage indisponible */
-      }
-    },
     format(usd: number, eur: number) {
       return currency === "EUR" ? formatEUR(eur) : formatUSD(usd);
     },
