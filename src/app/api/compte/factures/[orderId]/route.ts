@@ -3,6 +3,7 @@ import PDFDocument from "pdfkit";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getSettings } from "@/lib/settings";
+import { rateLimit } from "@/lib/security";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +30,9 @@ export async function GET(
   if (role !== "customer" || !customerId) {
     return NextResponse.json({ error: "Accès réservé aux clients connectés." }, { status: 403 });
   }
+  // La génération PDF est coûteuse : on la rate-limite (anti-DoS).
+  if (!rateLimit(`rl:facture:${customerId}`, 20, 60_000))
+    return NextResponse.json({ error: "Trop de requêtes, réessayez dans une minute." }, { status: 429 });
 
   const { orderId } = await params;
   const order = await prisma.order.findUnique({

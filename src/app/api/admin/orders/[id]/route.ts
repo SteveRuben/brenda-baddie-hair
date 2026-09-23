@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { requireStaff } from "@/lib/security";
 import { prisma } from "@/lib/prisma";
 
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const session = await auth();
-  if (!session?.user) return NextResponse.json({ error: "Non autorisé." }, { status: 401 });
+  if (!(await requireStaff()).ok)
+    return NextResponse.json({ error: "Non autorisé." }, { status: 403 });
   const { id } = await params;
   try {
     const data = await req.json();

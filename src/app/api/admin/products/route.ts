@@ -1,14 +1,9 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { requireStaff } from "@/lib/security";
 import { prisma } from "@/lib/prisma";
 
-async function requireAdmin() {
-  const session = await auth();
-  return !!session?.user;
-}
-
 export async function GET() {
-  if (!(await requireAdmin())) return NextResponse.json({ error: "Non autorisé." }, { status: 401 });
+  if (!(await requireStaff()).ok) return NextResponse.json({ error: "Non autorisé." }, { status: 403 });
   const products = await prisma.product.findMany({
     orderBy: { createdAt: "desc" },
     include: { images: true },
@@ -17,7 +12,7 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  if (!(await requireAdmin())) return NextResponse.json({ error: "Non autorisé." }, { status: 401 });
+  if (!(await requireStaff()).ok) return NextResponse.json({ error: "Non autorisé." }, { status: 403 });
   try {
     const data = await req.json();
     if (!data.name || data.priceUSD == null || data.priceEUR == null) {

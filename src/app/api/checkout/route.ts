@@ -2,11 +2,25 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSetting } from "@/lib/settings";
 import { auth } from "@/lib/auth";
+import { isSameOrigin, rateLimit, rateLimitKey } from "@/lib/security";
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function orderNumber(): string {
   const year = new Date().getFullYear();
   const rand = Math.floor(1000 + Math.random() * 9000);
   return `BBH-${year}-${rand}`;
+}
+
+// Le numéro de commande est @unique : en cas de collision (tirage aléatoire),
+// on réessaie plutôt que de renvoyer une erreur 500.
+async function uniqueOrderNumber(): Promise<string> {
+  for (let i = 0; i < 5; i++) {
+    const n = orderNumber();
+    const exists = await prisma.order.findUnique({ where: { number: n }, select: { id: true } });
+    if (!exists) return n;
+  }
+  return `BBH-${Date.now()}`;
 }
 
 interface CheckoutItem {
@@ -16,6 +30,10 @@ interface CheckoutItem {
 }
 
 export async function POST(req: Request) {
+  if (!isSameOrigin(req))
+    return NextResponse.json({ error: "Requête invalide." }, { status: 403 });
+  if (!rateLimit(rateLimitKey(req, "checkout"), 20, 60_000))
+    return NextResponse.json({ error: "Trop de requêtes, réessayez dans une minute." }, { status: 429 });
   try {
     const { customer, items } = (await req.json()) as {
       customer: {
@@ -34,6 +52,10 @@ export async function POST(req: Request) {
 
     if (!customer?.firstName || !customer?.lastName || !customer?.email) {
       return NextResponse.json({ error: "Informations client incomplètes." }, { status: 400 });
+    }
+    const email = customer.email.trim().toLowerCase();
+    if (!EMAIL_RE.test(email)) {
+      return NextResponse.json({ error: "Adresse email invalide." }, { status: 400 });
     }
     if (!items?.length) {
       return NextResponse.json({ error: "Panier vide." }, { status: 400 });
@@ -109,7 +131,17 @@ export async function POST(req: Request) {
           data: profileData,
         });
       }
-      // Invité : on réutilise la fiche existante pour cet email si elle existe
+      // Invité : on réutilise la fiche existante pour cet email si elle existe.
+      // Sécurité : si l'email appartient à un compte inscrit (mot de passe défini),
+      // on ne touche PAS à son profil — un invité ne doit pas pouvoir écraser
+      // les coordonnées d'un client existant. La commande reste liée à son compte.
+      const existingGuest = await prisma.customer.findUnique({
+        where: { email },
+        select: { id: true, password: true },
+      });
+      if (existingGuest?.password) {
+        return prisma.customer.findUniqueOrThrow({ where: { id: existingGuest.id } });
+      }
       return prisma.customer.upsert({
         where: { email },
         update: profileData,
@@ -125,7 +157,7 @@ export async function POST(req: Request) {
 
     const order = await prisma.order.create({
       data: {
-        number: orderNumber(),
+        number: await uniqueOrderNumber(),
         customerId: dbCustomer.id,
         items: { create: orderItems },
         subtotalUSD,

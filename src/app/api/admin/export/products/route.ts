@@ -1,15 +1,14 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { requireStaff, csvSafe } from "@/lib/security";
 import { prisma } from "@/lib/prisma";
 
 function csvCell(v: unknown): string {
-  const s = v == null ? "" : String(v);
-  return `"${s.replace(/"/g, '""')}"`;
+  return csvSafe(v);
 }
 
 export async function GET() {
-  const session = await auth();
-  if (!session?.user) return NextResponse.json({ error: "Non autorisé." }, { status: 401 });
+  if (!(await requireStaff()).ok)
+    return NextResponse.json({ error: "Non autorisé." }, { status: 403 });
 
   const products = await prisma.product.findMany({
     orderBy: { createdAt: "desc" },

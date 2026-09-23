@@ -3,6 +3,19 @@ import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { prisma } from "./prisma";
 
+// Hash factice pour la comparaison anti-oracle temporel : quand l'email
+// n'existe pas, on effectue quand même un bcrypt.compare afin que le temps
+// de réponse ne révèle pas l'existence du compte.
+const DUMMY_HASH = "$2b$10$f5VsaumWx3lSwF2jQ/NeBenmV1sIMrL1wq/YDJiR5iE9MakTaprhy";
+
+async function safeCompare(password: string, hash: string | null): Promise<boolean> {
+  if (!hash) {
+    await bcrypt.compare(password, DUMMY_HASH);
+    return false;
+  }
+  return bcrypt.compare(password, hash);
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
   session: { strategy: "jwt" },
@@ -19,9 +32,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const password = credentials?.password as string;
         if (!email || !password) return null;
         const user = await prisma.user.findUnique({ where: { email } });
-        if (!user) return null;
-        const ok = await bcrypt.compare(password, user.password);
-        if (!ok) return null;
+        const ok = await safeCompare(password, user?.password ?? null);
+        if (!user || !ok) return null;
         return { id: user.id, email: user.email, name: user.name, role: user.role };
       },
     }),
@@ -37,9 +49,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const password = credentials?.password as string;
         if (!email || !password) return null;
         const customer = await prisma.customer.findUnique({ where: { email } });
-        if (!customer || !customer.password) return null;
-        const ok = await bcrypt.compare(password, customer.password);
-        if (!ok) return null;
+        const ok = await safeCompare(password, customer?.password ?? null);
+        if (!customer || !ok) return null;
         return {
           id: customer.id,
           email: customer.email,

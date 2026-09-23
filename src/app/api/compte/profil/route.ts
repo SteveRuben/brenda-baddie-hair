@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { Session } from "next-auth";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { isSameOrigin, rateLimit, rateLimitKey } from "@/lib/security";
 
 function customerIdOf(session: Session | null): string | null {
   const role = (session?.user as { role?: string } | undefined)?.role;
@@ -34,6 +35,10 @@ export async function GET() {
 }
 
 export async function PUT(req: Request) {
+  if (!isSameOrigin(req))
+    return NextResponse.json({ error: "Requête invalide." }, { status: 403 });
+  if (!rateLimit(rateLimitKey(req, "profil"), 30, 60_000))
+    return NextResponse.json({ error: "Trop de requêtes, réessayez dans une minute." }, { status: 429 });
   const customerId = customerIdOf(await auth());
   if (!customerId) {
     return NextResponse.json({ error: "Non connecté." }, { status: 401 });

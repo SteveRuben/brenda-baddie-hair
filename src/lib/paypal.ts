@@ -13,6 +13,9 @@ function paypalClient() {
     },
     environment:
       process.env.PAYPAL_MODE === "live" ? Environment.Production : Environment.Sandbox,
+    // Timeout anti-blocage : un appel PayPal qui pend ne doit pas bloquer
+    // la requête indéfiniment (DoS par épuisement des workers).
+    timeout: 15000,
   });
 }
 

@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import { isSameOrigin, rateLimit, rateLimitKey } from "@/lib/security";
 
 export async function POST(req: Request) {
+  if (!isSameOrigin(req))
+    return NextResponse.json({ error: "Requête invalide." }, { status: 403 });
+  if (!rateLimit(rateLimitKey(req, "inscription"), 10, 60_000))
+    return NextResponse.json({ error: "Trop de tentatives, réessayez dans une minute." }, { status: 429 });
   try {
     const { firstName, lastName, email, password } = (await req.json()) as {
       firstName?: string;
@@ -27,15 +32,21 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
+    if (password.length > 72) {
+      // bcrypt tronque à 72 octets : on refuse plutôt que de hacher partiellement
+      return NextResponse.json(
+        { error: "Le mot de passe doit contenir au maximum 72 caractères." },
+        { status: 400 }
+      );
+    }
 
     const existing = await prisma.customer.findUnique({
       where: { email: normalizedEmail },
     });
     if (existing?.password) {
-      return NextResponse.json(
-        { error: "Un compte existe déjà avec cet email. Connectez-vous." },
-        { status: 409 }
-      );
+      // Anti-énumération : on répond comme en cas de succès, sans rien modifier.
+      // Un attaquant ne peut pas savoir si l'email est déjà inscrit.
+      return NextResponse.json({ ok: true });
     }
 
     const hash = await bcrypt.hash(password, 10);

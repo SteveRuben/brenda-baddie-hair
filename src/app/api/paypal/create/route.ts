@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createPaypalOrder, paypalConfigured } from "@/lib/paypal";
+import { isSameOrigin, rateLimit, rateLimitKey } from "@/lib/security";
 
 export async function POST(req: Request) {
+  if (!isSameOrigin(req))
+    return NextResponse.json({ error: "Requête invalide." }, { status: 403 });
+  if (!rateLimit(rateLimitKey(req, "paypal-create"), 20, 60_000))
+    return NextResponse.json({ error: "Trop de requêtes, réessayez dans une minute." }, { status: 429 });
   try {
     if (!paypalConfigured()) {
       return NextResponse.json({ error: "PayPal n'est pas configuré." }, { status: 500 });
