@@ -3,6 +3,7 @@ import { SessionProvider } from "next-auth/react";
 import { CartProvider } from "@/lib/cart";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import WhatsappChat from "@/components/WhatsappChat";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -20,6 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Header />
             <main className="min-h-[70vh]">{children}</main>
             <Footer />
+            <WhatsappChat />
           </CartProvider>
         </SessionProvider>
       </body>

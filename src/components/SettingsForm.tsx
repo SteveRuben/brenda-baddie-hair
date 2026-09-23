@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-const FIELDS: { key: string; label: string; type: "text" | "textarea" | "number" }[] = [
+const FIELDS: { key: string; label: string; type: "text" | "textarea" | "number" | "checkbox" }[] = [
   { key: "siteName", label: "Nom de la boutique", type: "text" },
   { key: "heroTitle", label: "Titre bannière d'accueil", type: "text" },
   { key: "heroSubtitle", label: "Sous-titre bannière d'accueil", type: "textarea" },
@@ -10,7 +10,11 @@ const FIELDS: { key: string; label: string; type: "text" | "textarea" | "number"
   { key: "aboutText", label: "Texte section À propos", type: "textarea" },
   { key: "instagramUrl", label: "Lien Instagram", type: "text" },
   { key: "tiktokUrl", label: "Lien TikTok", type: "text" },
+  { key: "facebookUrl", label: "Lien Facebook", type: "text" },
+  { key: "youtubeUrl", label: "Lien YouTube", type: "text" },
   { key: "whatsappNumber", label: "Numéro WhatsApp (format international, ex. 14165551234)", type: "text" },
+  { key: "whatsappChatEnabled", label: "Afficher la bulle de discussion WhatsApp", type: "checkbox" },
+  { key: "whatsappChatMessage", label: "Message pré-rempli de la bulle WhatsApp", type: "textarea" },
   { key: "shippingFeeUSD", label: "Frais de livraison — USD", type: "number" },
   { key: "shippingFeeEUR", label: "Frais de livraison — EUR", type: "number" },
   { key: "legalMentions", label: "Mentions légales", type: "textarea" },
@@ -47,28 +51,45 @@ export default function SettingsForm({ initial }: { initial: Record<string, stri
   return (
     <form onSubmit={save} className="max-w-3xl">
       <div className="grid gap-5">
-        {FIELDS.map((f) => (
-          <label key={f.key} className="block text-sm font-semibold">
-            {f.label}
-            {f.type === "textarea" ? (
-              <textarea
-                className={inputCls}
-                rows={4}
-                value={form[f.key] ?? ""}
-                onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
-              />
-            ) : (
+        {FIELDS.map((f) =>
+          f.type === "checkbox" ? (
+            <label
+              key={f.key}
+              className="flex cursor-pointer items-center gap-3 text-sm font-semibold"
+            >
               <input
-                className={inputCls}
-                type={f.type === "number" ? "number" : "text"}
-                min={f.type === "number" ? 0 : undefined}
-                step={f.type === "number" ? "0.01" : undefined}
-                value={form[f.key] ?? ""}
-                onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
+                type="checkbox"
+                className="h-5 w-5 accent-brand-600"
+                checked={form[f.key] === "true"}
+                onChange={(e) =>
+                  setForm({ ...form, [f.key]: e.target.checked ? "true" : "false" })
+                }
               />
-            )}
-          </label>
-        ))}
+              {f.label}
+            </label>
+          ) : (
+            <label key={f.key} className="block text-sm font-semibold">
+              {f.label}
+              {f.type === "textarea" ? (
+                <textarea
+                  className={inputCls}
+                  rows={4}
+                  value={form[f.key] ?? ""}
+                  onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
+                />
+              ) : (
+                <input
+                  className={inputCls}
+                  type={f.type === "number" ? "number" : "text"}
+                  min={f.type === "number" ? 0 : undefined}
+                  step={f.type === "number" ? "0.01" : undefined}
+                  value={form[f.key] ?? ""}
+                  onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
+                />
+              )}
+            </label>
+          )
+        )}
       </div>
       <div className="mt-6 flex items-center gap-3">
         <button
