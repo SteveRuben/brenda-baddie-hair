@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getSetting } from "@/lib/settings";
 import ProductPurchase from "@/components/ProductPurchase";
+import ProductGallery from "@/components/ProductGallery";
 
 export const dynamic = "force-dynamic";
 
@@ -27,29 +28,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
       <div className="grid gap-10 md:grid-cols-2">
-        <div>
-          <div className="aspect-square overflow-hidden rounded-2xl bg-brand-50">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={product.images[0]?.url ?? "/images/placeholder.png"}
-              alt={product.images[0]?.alt ?? product.name}
-              className="h-full w-full object-cover"
-            />
-          </div>
-          {product.images.length > 1 && (
-            <div className="mt-3 grid grid-cols-4 gap-3">
-              {product.images.slice(1, 5).map((img) => (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  key={img.id}
-                  src={img.url}
-                  alt={img.alt ?? product.name}
-                  className="aspect-square rounded-xl bg-brand-50 object-cover"
-                />
-              ))}
-            </div>
-          )}
-        </div>
+        <ProductGallery images={product.images} productName={product.name} />
 
         <div>
           {product.category && (
