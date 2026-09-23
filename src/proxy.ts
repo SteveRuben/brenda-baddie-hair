@@ -5,6 +5,7 @@ export default auth((req) => {
   const { pathname } = req.nextUrl;
   const isLoggedIn = !!req.auth;
   const isLoginPage = pathname === "/admin/login";
+  const role = (req.auth?.user as { role?: string } | undefined)?.role;
 
   if (pathname.startsWith("/admin") && !isLoginPage && !isLoggedIn) {
     return NextResponse.redirect(new URL("/admin/login", req.nextUrl));
@@ -12,9 +13,21 @@ export default auth((req) => {
   if (isLoginPage && isLoggedIn) {
     return NextResponse.redirect(new URL("/admin", req.nextUrl));
   }
+
+  // Espace client : pages publiques = connexion + inscription
+  const isComptePublic =
+    pathname === "/compte/connexion" || pathname === "/compte/inscription";
+  if (pathname.startsWith("/compte") && !isComptePublic) {
+    if (!isLoggedIn || role !== "customer") {
+      return NextResponse.redirect(new URL("/compte/connexion", req.nextUrl));
+    }
+  }
+  if (isComptePublic && isLoggedIn && role === "customer") {
+    return NextResponse.redirect(new URL("/compte", req.nextUrl));
+  }
   return NextResponse.next();
 });
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/compte/:path*"],
 };

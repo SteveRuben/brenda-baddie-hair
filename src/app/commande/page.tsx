@@ -32,6 +32,25 @@ export default function CheckoutPage() {
       .then((r) => r.json())
       .then((d) => setShipping({ usd: d.shippingFeeUSD ?? 0, eur: d.shippingFeeEUR ?? 0 }))
       .catch(() => {});
+    // Client connecté : pré-remplit le formulaire avec son profil
+    fetch("/api/compte/profil")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((p) => {
+        if (p) {
+          setForm((f) => ({
+            ...f,
+            firstName: p.firstName ?? f.firstName,
+            lastName: p.lastName ?? f.lastName,
+            email: p.email ?? f.email,
+            phone: p.phone ?? f.phone,
+            address: p.address ?? f.address,
+            city: p.city ?? f.city,
+            postalCode: p.postalCode ?? f.postalCode,
+            country: p.country ?? f.country,
+          }));
+        }
+      })
+      .catch(() => {});
   }, []);
 
   const totalUSD = subtotalUSD + shipping.usd;

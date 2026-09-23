@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSetting } from "@/lib/settings";
+import { auth } from "@/lib/auth";
 
 function orderNumber(): string {
   const year = new Date().getFullYear();
@@ -87,18 +88,37 @@ export async function POST(req: Request) {
       });
     }
 
-    const dbCustomer = await prisma.customer.create({
-      data: {
+    const dbCustomer = await (async () => {
+      const session = await auth();
+      const role = (session?.user as { role?: string } | undefined)?.role;
+      const sessionCustomerId = (session?.user as { id?: string } | undefined)?.id;
+      const email = customer.email.trim().toLowerCase();
+      const profileData = {
         firstName: customer.firstName,
         lastName: customer.lastName,
-        email: customer.email,
-        phone: customer.phone,
-        address: customer.address,
-        city: customer.city,
-        postalCode: customer.postalCode,
-        country: customer.country,
-      },
-    });
+        phone: customer.phone || null,
+        address: customer.address || null,
+        city: customer.city || null,
+        postalCode: customer.postalCode || null,
+        country: customer.country || null,
+      };
+      if (role === "customer" && sessionCustomerId) {
+        // Client connecté : la commande est liée à son compte
+        return prisma.customer.update({
+          where: { id: sessionCustomerId },
+          data: profileData,
+        });
+      }
+      // Invité : on réutilise la fiche existante pour cet email si elle existe
+      return prisma.customer.upsert({
+        where: { email },
+        update: profileData,
+        create: {
+          email,
+          ...profileData,
+        },
+      });
+    })();
 
     const shippingUSD = Number(await getSetting("shippingFeeUSD")) || 0;
     const shippingEUR = Number(await getSetting("shippingFeeEUR")) || 0;

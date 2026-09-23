@@ -1,10 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import { useSession, signOut } from "next-auth/react";
 import { useCart } from "@/lib/cart";
 
 export default function Header() {
   const { count } = useCart();
+  const { data: session } = useSession();
+  const role = (session?.user as { role?: string } | undefined)?.role;
+  const isCustomer = role === "customer";
+  const isLoggedIn = !!session?.user;
   return (
     <header className="sticky top-0 z-40 border-b border-brand-100 bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
@@ -21,6 +26,23 @@ export default function Header() {
           <Link href="/#contact" className="hover:text-brand-600">
             Contact
           </Link>
+          {isCustomer ? (
+            <>
+              <Link href="/compte" className="hover:text-brand-600">
+                Mon compte
+              </Link>
+              <button
+                onClick={() => signOut({ callbackUrl: "/" })}
+                className="hover:text-brand-600"
+              >
+                Déconnexion
+              </button>
+            </>
+          ) : (
+            <Link href="/compte/connexion" className="hover:text-brand-600">
+              {isLoggedIn ? "Mon compte" : "Se connecter"}
+            </Link>
+          )}
           <Link
             href="/panier"
             className="relative rounded-full bg-brand-600 px-4 py-2 text-white hover:bg-brand-700"

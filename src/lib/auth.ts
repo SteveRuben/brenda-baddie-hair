@@ -25,6 +25,29 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         return { id: user.id, email: user.email, name: user.name, role: user.role };
       },
     }),
+    Credentials({
+      id: "customer",
+      name: "Client",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Mot de passe", type: "password" },
+      },
+      async authorize(credentials) {
+        const email = credentials?.email as string;
+        const password = credentials?.password as string;
+        if (!email || !password) return null;
+        const customer = await prisma.customer.findUnique({ where: { email } });
+        if (!customer || !customer.password) return null;
+        const ok = await bcrypt.compare(password, customer.password);
+        if (!ok) return null;
+        return {
+          id: customer.id,
+          email: customer.email,
+          name: `${customer.firstName} ${customer.lastName}`,
+          role: "customer",
+        };
+      },
+    }),
   ],
   callbacks: {
     // La redirection est gérée manuellement dans src/proxy.ts
