@@ -23,6 +23,8 @@ export const SETTING_DEFAULTS: Record<string, string> = {
   shippingFeeEUR: "0",
   legalMentions: "",
   cgv: "",
+  privacyPolicy:
+    "Dernière mise à jour : septembre 2026.\n\n1. Responsable du traitement\nbree baddie hair est responsable du traitement de vos données personnelles. Pour toute question, contactez-nous via la page Contact.\n\n2. Données collectées\nNous collectons les données que vous nous fournissez : nom, email, adresse de livraison et de facturation lors de la création de votre compte et de vos commandes, ainsi que l'historique de vos achats.\n\n3. Finalités\nVos données servent uniquement à : traiter et livrer vos commandes, gérer votre compte client, vous envoyer les emails liés à vos achats (confirmation, suivi) et répondre à vos demandes.\n\n4. Cookies\nLe site utilise le stockage local de votre navigateur pour le panier (indispensable au fonctionnement de la boutique, exempté de consentement). Avec votre accord, des cookies de mesure d'audience peuvent être déposés. Le paiement via PayPal est soumis à la politique de confidentialité de PayPal.\n\n5. Conservation\nVos données sont conservées le temps nécessaire à la gestion de la relation commerciale et aux obligations légales (facturation).\n\n6. Vos droits\nConformément au RGPD, vous disposez d'un droit d'accès, de rectification, d'effacement, de limitation et de portabilité de vos données, ainsi que d'un droit d'opposition. Pour exercer ces droits, contactez-nous via la page Contact. Vous pouvez également introduire une réclamation auprès de l'autorité de protection des données compétente.",
 };
 
 export async function getSettings(): Promise<Record<string, string>> {

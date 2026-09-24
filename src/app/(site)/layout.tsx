@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
 import WhatsappChat from "@/components/WhatsappChat";
+import CookieConsent from "@/components/CookieConsent";
 import { getSettings } from "@/lib/settings";
 
 /**
@@ -17,6 +18,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       <Footer />
       <CartDrawer />
       <WhatsappChat />
+      <CookieConsent />
     </>
   );
 }

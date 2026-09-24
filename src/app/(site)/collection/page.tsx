@@ -4,6 +4,12 @@ import CollectionFilters from "@/components/CollectionFilters";
 
 export const dynamic = "force-dynamic";
 
+export const metadata = {
+  title: "Collections",
+  description:
+    "Découvrez nos collections de perruques premium : body wave, straight, curly. Qualité, style et confiance.",
+};
+
 interface SearchParams {
   [key: string]: string | undefined;
   q?: string;

@@ -7,6 +7,8 @@ const nextConfig: NextConfig = {
       // Ancien nom de la page collection (liens/bookmarks existants)
       { source: "/catalogue", destination: "/collection", permanent: true },
       { source: "/catalogue/:path*", destination: "/collection/:path*", permanent: true },
+      // Alias du manifeste PWA (certains outils cherchent /manifest.json)
+      { source: "/manifest.json", destination: "/manifest.webmanifest", permanent: true },
     ];
   },
   async headers() {

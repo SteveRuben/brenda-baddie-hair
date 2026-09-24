@@ -23,6 +23,7 @@ const FIELDS: { key: string; label: string; type: "text" | "textarea" | "number"
   { key: "shippingFeeEUR", label: "Frais de livraison — EUR", type: "number" },
   { key: "legalMentions", label: "Mentions légales", type: "textarea" },
   { key: "cgv", label: "Conditions générales de vente (CGV)", type: "textarea" },
+  { key: "privacyPolicy", label: "Politique de confidentialité (RGPD)", type: "textarea" },
 ];
 
 export default function SettingsForm({ initial }: { initial: Record<string, string> }) {

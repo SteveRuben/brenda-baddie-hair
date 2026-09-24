@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { getSettings } from "@/lib/settings";
+import { SITE_URL } from "@/lib/site";
 import ProductCard from "@/components/ProductCard";
 
 export const dynamic = "force-dynamic";
@@ -31,6 +32,24 @@ export default async function Home() {
 
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: settings.siteName,
+            url: SITE_URL,
+            logo: `${SITE_URL}/images/logo-embleme.webp`,
+            sameAs: [
+              settings.instagramUrl,
+              settings.tiktokUrl,
+              settings.facebookUrl,
+              settings.youtubeUrl,
+            ].filter(Boolean),
+          }),
+        }}
+      />
       {/* Hero */}
       <section className="relative overflow-hidden text-white">
         {settings.heroImageUrl ? (

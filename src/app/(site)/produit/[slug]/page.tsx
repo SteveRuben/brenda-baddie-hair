@@ -6,6 +6,33 @@ import ProductGallery from "@/components/ProductGallery";
 
 export const dynamic = "force-dynamic";
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  try {
+    const product = await prisma.product.findUnique({
+      where: { slug },
+      include: { images: { orderBy: { position: "asc" }, take: 1 } },
+    });
+    if (!product || product.status !== "active") return {};
+    const description =
+      product.description?.slice(0, 160) ||
+      `${product.name} — perruque premium bree baddie hair.`;
+    const images = product.images[0]?.url ? [{ url: product.images[0].url }] : [];
+    return {
+      title: product.name,
+      description,
+      openGraph: { title: product.name, description, images, type: "website" },
+      twitter: { card: "summary_large_image", title: product.name, description, images: images.map((i) => i.url) },
+    };
+  } catch {
+    return {};
+  }
+}
+
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const product = await prisma.product.findUnique({

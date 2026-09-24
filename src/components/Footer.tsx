@@ -98,6 +98,21 @@ export default async function Footer() {
                 Contact
               </Link>
             </li>
+            <li>
+              <Link href="/mentions-legales" className={linkCls}>
+                Mentions légales
+              </Link>
+            </li>
+            <li>
+              <Link href="/cgv" className={linkCls}>
+                CGV
+              </Link>
+            </li>
+            <li>
+              <Link href="/confidentialite" className={linkCls}>
+                Confidentialité
+              </Link>
+            </li>
           </ul>
         </div>
         <div id="contact">
