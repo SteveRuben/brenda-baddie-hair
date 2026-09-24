@@ -5,20 +5,7 @@ import { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useCart } from "@/lib/cart";
 import { BagIcon } from "./CartDrawer";
-
-// Nom de la boutique avec le mot central en rouge (ex. "bree baddie hair").
-// Si le nom n'a pas 3 mots, affichage simple.
-function BrandName({ name }: { name: string }) {
-  const words = name.trim().split(/\s+/);
-  if (words.length === 3) {
-    return (
-      <>
-        {words[0]} <span className="text-brand-500">{words[1]}</span> {words[2]}
-      </>
-    );
-  }
-  return <>{name}</>;
-}
+import Logo from "./Logo";
 
 export default function Header({ siteName }: { siteName: string }) {
   const { count, openCart } = useCart();
@@ -71,11 +58,8 @@ export default function Header({ siteName }: { siteName: string }) {
       </div>
       <header className="border-b border-brand-100 bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-          <Link
-            href="/"
-            className="whitespace-nowrap text-lg font-extrabold tracking-tight text-brand-700 md:text-xl"
-          >
-            <BrandName name={siteName} />
+          <Link href="/" aria-label={siteName} className="inline-block py-0.5">
+            <Logo name={siteName} />
           </Link>
           {/* Navigation bureau */}
           <nav className="hidden items-center gap-5 text-sm font-medium md:flex">

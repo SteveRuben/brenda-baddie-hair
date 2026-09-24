@@ -1,5 +1,23 @@
 @import "tailwindcss";
 
+/* Polices du logo « Signature » (proposition 1 validée le 2026-09-24).
+   Fichiers locaux (licence SIL OFL) : aucun appel réseau au build. */
+@font-face {
+  font-family: "Great Vibes";
+  src: url("/fonts/great-vibes.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Playfair Display";
+  src: url("/fonts/playfair-display.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   --color-brand-50: #fdf2f4;
   --color-brand-100: #fbe5e9;
@@ -9,7 +27,11 @@
   --color-brand-700: #7c1426;
   --color-brand-800: #5c0e1c;
   --color-brand-900: #400914;
+  --color-logo-pink: #e84393;
+  --color-logo-cream: #f5efe4;
   --font-sans: "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-script: "Great Vibes", cursive;
+  --font-display: "Playfair Display", Georgia, serif;
 }
 
 html {

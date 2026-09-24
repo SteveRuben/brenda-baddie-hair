@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getSettings } from "@/lib/settings";
+import Logo from "./Logo";
 import {
   InstagramIcon,
   TiktokIcon,
@@ -31,7 +32,7 @@ export default async function Footer() {
     <footer className="mt-16 bg-brand-900 text-brand-100">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2 md:grid-cols-4">
         <div>
-          <p className="text-lg font-extrabold text-white">{settings.siteName}</p>
+          <Logo name={settings.siteName} variant="dark" />
           <p className="mt-2 text-sm text-brand-200">
             Des perruques premium pour révéler la baddie en vous. Qualité, style
             et confiance.
