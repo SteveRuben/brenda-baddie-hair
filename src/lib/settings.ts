@@ -23,13 +23,23 @@ export const SETTING_DEFAULTS: Record<string, string> = {
 };
 
 export async function getSettings(): Promise<Record<string, string>> {
-  const rows = await prisma.setting.findMany();
-  const merged: Record<string, string> = { ...SETTING_DEFAULTS };
-  for (const r of rows) merged[r.key] = r.value;
-  return merged;
+  try {
+    const rows = await prisma.setting.findMany();
+    const merged: Record<string, string> = { ...SETTING_DEFAULTS };
+    for (const r of rows) merged[r.key] = r.value;
+    return merged;
+  } catch {
+    // BD indisponible (ex. pendant le build sans DATABASE_URL) :
+    // on rend le site avec les valeurs par défaut plutôt que de planter.
+    return { ...SETTING_DEFAULTS };
+  }
 }
 
 export async function getSetting(key: string): Promise<string> {
-  const row = await prisma.setting.findUnique({ where: { key } });
-  return row?.value ?? SETTING_DEFAULTS[key] ?? "";
+  try {
+    const row = await prisma.setting.findUnique({ where: { key } });
+    return row?.value ?? SETTING_DEFAULTS[key] ?? "";
+  } catch {
+    return SETTING_DEFAULTS[key] ?? "";
+  }
 }

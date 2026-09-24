@@ -1,0 +1,1 @@
+{"$schema":"https://railway.app/railway.schema.json","build":{"buildCommand":"npx prisma generate && npm run build","builder":"RAILPACK"},"deploy":{"healthcheckPath":"/","healthcheckTimeout":120,"restartPolicyMaxRetries":10,"restartPolicyType":"ON_FAILURE","startCommand":"npx prisma migrate deploy && npm run start"}}
