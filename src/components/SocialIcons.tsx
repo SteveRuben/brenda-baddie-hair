@@ -33,11 +33,19 @@ export function InstagramIcon({ size = 20, className }: IconProps) {
 }
 
 export function TiktokIcon({ size = 20, className }: IconProps) {
+  // Silhouette du vrai logo TikTok (forme pleine : tête ronde en bas à
+  // gauche, tige épaisse, bec caractéristique en haut à droite).
   return (
-    <svg {...svgProps(size, className)}>
-      <path d="M9 18V5l12-2v13" />
-      <circle cx="6" cy="18" r="3" />
-      <circle cx="18" cy="16" r="3" />
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+      aria-hidden
+    >
+      <ellipse cx="7.8" cy="16.3" rx="4.7" ry="4.4" />
+      <path d="M11.2 2.2h3.2c2.6.3 4.9 1.7 6 3.9.5 1 .4 2-.3 2.8-1.4 1.4-3.4 2.1-5.4 2.2v5.2h-3.5z" />
     </svg>
   );
 }
