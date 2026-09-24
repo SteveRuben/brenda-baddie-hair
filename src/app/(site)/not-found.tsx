@@ -18,10 +18,10 @@ export default function SiteNotFound() {
           Retour à l'accueil
         </Link>
         <Link
-          href="/catalogue"
+          href="/collection"
           className="rounded-full border border-brand-200 px-6 py-3 font-bold text-brand-700 hover:bg-brand-50"
         >
-          Voir le catalogue
+          Voir la collection
         </Link>
       </div>
     </div>

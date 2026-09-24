@@ -23,10 +23,10 @@ export default function CartPage() {
         <h1 className="text-3xl font-extrabold">Votre panier est vide</h1>
         <p className="mt-2 text-neutral-500">Découvrez nos perruques premium.</p>
         <Link
-          href="/catalogue"
+          href="/collection"
           className="mt-6 inline-block rounded-full bg-brand-600 px-8 py-3 font-bold text-white hover:bg-brand-700"
         >
-          Voir le catalogue
+          Voir la collection
         </Link>
       </div>
     );

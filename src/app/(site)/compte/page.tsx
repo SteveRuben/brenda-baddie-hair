@@ -49,7 +49,7 @@ export default async function ComptePage() {
           {customer.orders.length === 0 ? (
             <p className="mt-3 text-sm text-neutral-500">
               Vous n'avez pas encore passé de commande.{" "}
-              <Link href="/catalogue" className="font-semibold text-brand-600 hover:underline">
+              <Link href="/collection" className="font-semibold text-brand-600 hover:underline">
                 Découvrir la collection
               </Link>
             </p>

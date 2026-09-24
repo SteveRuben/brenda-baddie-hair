@@ -59,8 +59,8 @@ export default async function Footer() {
           <p className="font-bold text-white">Boutique</p>
           <ul className="mt-2 space-y-1 text-sm">
             <li>
-              <Link href="/catalogue" className={linkCls}>
-                Catalogue
+              <Link href="/collection" className={linkCls}>
+                Collection
               </Link>
             </li>
             <li>

@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import ProductCard from "@/components/ProductCard";
-import CatalogueFilters from "@/components/CatalogueFilters";
+import CollectionFilters from "@/components/CollectionFilters";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +17,7 @@ interface SearchParams {
   sort?: string;
 }
 
-export default async function Catalogue({
+export default async function Collection({
   searchParams,
 }: {
   searchParams: Promise<SearchParams>;
@@ -87,10 +87,10 @@ export default async function Catalogue({
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
-      <h1 className="text-3xl font-extrabold">Catalogue</h1>
+      <h1 className="text-3xl font-extrabold">Collection</h1>
       <p className="mt-1 text-neutral-500">{products.length} produit(s)</p>
 
-      <CatalogueFilters
+      <CollectionFilters
         colors={colors.map((c) => c.color).filter(Boolean) as string[]}
         brands={brands.map((b) => b.brand).filter(Boolean) as string[]}
         sizes={sizes.map((s) => s.size).filter(Boolean) as string[]}

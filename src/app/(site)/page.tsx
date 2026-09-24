@@ -53,10 +53,10 @@ export default async function Home() {
             {settings.heroSubtitle}
           </p>
           <Link
-            href="/catalogue"
+            href="/collection"
             className="mt-8 inline-block rounded-full bg-white px-8 py-3 font-bold text-brand-700 shadow-lg transition hover:scale-105"
           >
-            Découvrir le catalogue
+            Découvrir la collection
           </Link>
         </div>
       </section>
@@ -75,7 +75,7 @@ export default async function Home() {
       <section className="mx-auto max-w-6xl px-4 py-14">
         <div className="mb-8 flex items-end justify-between">
           <h2 className="text-2xl font-extrabold">Nos coups de cœur</h2>
-          <Link href="/catalogue" className="text-sm font-semibold text-brand-600 hover:underline">
+          <Link href="/collection" className="text-sm font-semibold text-brand-600 hover:underline">
             Tout voir →
           </Link>
         </div>

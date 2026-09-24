@@ -120,11 +120,11 @@ export default function CartDrawer() {
               Découvrez nos perruques premium.
             </p>
             <Link
-              href="/catalogue"
+              href="/collection"
               onClick={closeCart}
               className="mt-2 rounded-full bg-brand-600 px-8 py-3 font-bold text-white hover:bg-brand-700"
             >
-              Voir le catalogue
+              Voir la collection
             </Link>
           </div>
         ) : (

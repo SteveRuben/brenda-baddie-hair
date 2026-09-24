@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function CatalogueFilters({
+export default function CollectionFilters({
   colors,
   brands,
   sizes,
@@ -20,7 +20,7 @@ export default function CatalogueFilters({
     const sp = new URLSearchParams(searchParams.toString());
     if (value) sp.set(key, value);
     else sp.delete(key);
-    router.push(`/catalogue?${sp.toString()}`);
+    router.push(`/collection?${sp.toString()}`);
   }
 
   const inputCls =

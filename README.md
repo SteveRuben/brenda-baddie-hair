@@ -6,7 +6,7 @@ Boutique en ligne de vente de perruques premium, développée en **Next.js 16** 
 
 | Accueil | Catalogue |
 |---|---|
-| ![Page d'accueil](docs/screenshots/accueil.png) | ![Catalogue](docs/screenshots/catalogue.png) |
+| ![Page d'accueil](docs/screenshots/accueil.png) | ![Collection](docs/screenshots/catalogue.png) |
 
 | Fiche produit | Mini-panier |
 |---|---|

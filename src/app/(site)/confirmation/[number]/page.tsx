@@ -47,7 +47,7 @@ export default async function ConfirmationPage({
         </div>
       </div>
       <Link
-        href="/catalogue"
+        href="/collection"
         className="mt-8 inline-block rounded-full bg-brand-600 px-8 py-3 font-bold text-white hover:bg-brand-700"
       >
         Continuer mes achats

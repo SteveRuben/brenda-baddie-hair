@@ -19,7 +19,7 @@ export default function AProposPage() {
           pensées pour sublimer toutes les beautés.
         </p>
         <p>
-          Chaque modèle de notre catalogue est choisi avec exigence : qualité des
+          Chaque modèle de notre collection est choisi avec exigence : qualité des
           cheveux, finition de la lace, confort de port et rendu naturel. Nous
           testons nos produits avant de vous les proposer, parce que votre
           satisfaction est notre meilleure publicité.

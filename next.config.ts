@@ -2,6 +2,13 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  async redirects() {
+    return [
+      // Ancien nom de la page collection (liens/bookmarks existants)
+      { source: "/catalogue", destination: "/collection", permanent: true },
+      { source: "/catalogue/:path*", destination: "/collection/:path*", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {
