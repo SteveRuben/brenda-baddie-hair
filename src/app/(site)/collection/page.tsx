@@ -31,6 +31,7 @@ export default async function Collection({
   const params = await searchParams;
   const where: Record<string, unknown> = { status: "active" };
   if (params.q) where.name = { contains: params.q, mode: "insensitive" };
+  if (params.categorie) where.category = { slug: params.categorie };
   if (params.color) where.color = params.color;
   if (params.brand) where.brand = params.brand;
   if (params.size) where.size = params.size;
@@ -70,6 +71,7 @@ export default async function Collection({
     variants: { select: { priceUSD: true, priceEUR: true } },
   };
   let products;
+  let activeCategory: { name: string } | null = null;
 
   if (params.sort === "popular") {
     const sales = await prisma.orderItem.groupBy({
@@ -90,10 +92,18 @@ export default async function Collection({
           : { createdAt: "desc" as const };
     products = await prisma.product.findMany({ where, orderBy, include });
   }
+  if (params.categorie) {
+    activeCategory = await prisma.category.findUnique({
+      where: { slug: String(params.categorie) },
+      select: { name: true },
+    });
+  }
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
-      <h1 className="text-3xl font-extrabold">Collections</h1>
+      <h1 className="text-3xl font-extrabold">
+        {activeCategory ? activeCategory.name : "Collections"}
+      </h1>
       <p className="mt-1 text-neutral-500">{products.length} produit(s)</p>
 
       <CollectionFilters

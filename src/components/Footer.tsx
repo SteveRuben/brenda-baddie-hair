@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getSettings } from "@/lib/settings";
 import Logo from "./Logo";
+import NewsletterForm from "./NewsletterForm";
 import {
   InstagramIcon,
   TiktokIcon,
@@ -54,6 +55,9 @@ export default async function Footer() {
               ))}
             </div>
           )}
+          <div className="mt-6">
+            <NewsletterForm variant="footer" />
+          </div>
         </div>
         <div>
           <p className="font-bold text-white">Boutique</p>

@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getSetting } from "@/lib/settings";
 import ProductPurchase from "@/components/ProductPurchase";
 import ProductGallery from "@/components/ProductGallery";
+import ProductAccordions from "@/components/ProductAccordions";
 
 export const dynamic = "force-dynamic";
 
@@ -88,29 +89,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             />
           </div>
 
-          <div className="mt-4 space-y-1 text-sm text-neutral-600">
-            {product.brand && (
-              <p>
-                <span className="font-semibold">Marque :</span> {product.brand}
-              </p>
-            )}
-            {product.color && (
-              <p>
-                <span className="font-semibold">Couleur :</span> {product.color}
-              </p>
-            )}
-            {product.size && (
-              <p>
-                <span className="font-semibold">Taille :</span> {product.size}
-              </p>
-            )}
-            <p>
-              <span className="font-semibold">Stock :</span>{" "}
-              {product.stock > 0 ? `${product.stock} disponible(s)` : "Rupture de stock"}
-            </p>
-          </div>
-
-          <p className="mt-5 leading-relaxed text-neutral-700">{product.description}</p>
+          <ProductAccordions
+            description={product.description}
+            brand={product.brand}
+            color={product.color}
+            size={product.size}
+            stock={product.stock}
+          />
 
           {whatsapp && (
             <a

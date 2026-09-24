@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getSettings } from "@/lib/settings";
 import { SITE_URL } from "@/lib/site";
 import ProductCard from "@/components/ProductCard";
+import NewsletterForm from "@/components/NewsletterForm";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +19,7 @@ function renderRich(text: string) {
 }
 
 export default async function Home() {
-  const [featured, settings] = await Promise.all([
+  const [featured, settings, categories] = await Promise.all([
     prisma.product.findMany({
       where: { status: "active", featured: true },
       include: {
@@ -28,7 +29,12 @@ export default async function Home() {
       take: 6,
     }),
     getSettings(),
+    prisma.category.findMany({
+      include: { _count: { select: { products: { where: { status: "active" } } } } },
+      orderBy: { name: "asc" },
+    }),
   ]);
+  const visibleCategories = categories.filter((c) => c._count.products > 0);
 
   return (
     <div>
@@ -111,6 +117,34 @@ export default async function Home() {
         )}
       </section>
 
+      {/* Nos catégories (façon "Notre sélection" de Nandi's Wigs) */}
+      {visibleCategories.length > 0 && (
+        <section className="mx-auto max-w-6xl px-4 py-14">
+          <h2 className="text-center text-2xl font-extrabold uppercase tracking-wide">
+            Notre sélection
+          </h2>
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 md:grid-cols-4">
+            {visibleCategories.map((c) => (
+              <Link
+                key={c.id}
+                href={`/collection?categorie=${encodeURIComponent(c.slug)}`}
+                className="group flex flex-col items-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 px-6 py-10 text-center text-white transition hover:shadow-lg"
+              >
+                <span className="text-lg font-extrabold uppercase tracking-wide">
+                  {c.name}
+                </span>
+                <span className="mt-1 text-sm text-brand-100">
+                  {c._count.products} modèle{c._count.products > 1 ? "s" : ""}
+                </span>
+                <span className="mt-4 text-sm font-bold underline-offset-4 group-hover:underline">
+                  Découvrir →
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* À propos */}
       <section className="mx-auto max-w-6xl px-4 py-14">
         <h2 className="text-2xl font-extrabold">{settings.aboutTitle}</h2>
@@ -132,6 +166,11 @@ export default async function Home() {
           ))}
         </div>
       </section>
+
+      {/* Newsletter (colle au footer : compense son mt-16) */}
+      <div className="-mb-16">
+        <NewsletterForm />
+      </div>
     </div>
   );
 }
