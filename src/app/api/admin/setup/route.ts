@@ -64,7 +64,17 @@ export async function POST(req: Request) {
     let seeded = 0;
     if (seedProducts && (await prisma.product.count()) === 0) {
       for (const p of DEMO_PRODUCTS) {
-        await prisma.product.upsert({ where: { slug: p.slug }, update: {}, create: p });
+        const { images = [], ...data } = p;
+        const product = await prisma.product.upsert({
+          where: { slug: p.slug },
+          update: {},
+          create: data,
+        });
+        if (images.length > 0) {
+          await prisma.productImage.createMany({
+            data: images.map((url, i) => ({ url, position: i, productId: product.id })),
+          });
+        }
       }
       seeded = DEMO_PRODUCTS.length;
     }

@@ -14,6 +14,8 @@ export interface DemoProduct {
   stock: number;
   status: string;
   featured: boolean;
+  /** Chemins d'images de démonstration (ex. /images/demo/xxx.jpg), dans l'ordre d'affichage. */
+  images?: string[];
 }
 
 export const DEMO_PRODUCTS: DemoProduct[] = [
@@ -58,6 +60,11 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
     stock: 8,
     status: "active",
     featured: true,
+    images: [
+      "/images/demo/body-wave-1.jpg",
+      "/images/demo/body-wave-2.jpg",
+      "/images/demo/body-wave-3.jpg",
+    ],
   },
   {
     name: "Bob Chic 12\"",

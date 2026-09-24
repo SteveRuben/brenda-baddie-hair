@@ -25,11 +25,18 @@ async function main() {
   }
 
   for (const p of DEMO_PRODUCTS) {
-    await prisma.product.upsert({
+    const { images = [], ...data } = p;
+    const product = await prisma.product.upsert({
       where: { slug: p.slug },
       update: {},
-      create: p,
+      create: data,
     });
+    if (images.length > 0) {
+      await prisma.productImage.deleteMany({ where: { productId: product.id } });
+      await prisma.productImage.createMany({
+        data: images.map((url, i) => ({ url, position: i, productId: product.id })),
+      });
+    }
   }
   console.log(`✓ ${DEMO_PRODUCTS.length} produits de démo créés`);
 }

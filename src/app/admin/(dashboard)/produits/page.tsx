@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { formatUSD, formatEUR } from "@/lib/format";
+import SeedDemoImagesButton from "./SeedDemoImagesButton";
 
 export const dynamic = "force-dynamic";
 
@@ -14,12 +15,15 @@ export default async function AdminProducts() {
     <div>
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-extrabold">Produits ({products.length})</h1>
-        <Link
-          href="/admin/produits/nouveau"
-          className="rounded-full bg-brand-600 px-5 py-2.5 font-bold text-white hover:bg-brand-700"
-        >
-          + Nouveau produit
-        </Link>
+        <div className="flex items-center gap-3">
+          <SeedDemoImagesButton />
+          <Link
+            href="/admin/produits/nouveau"
+            className="rounded-full bg-brand-600 px-5 py-2.5 font-bold text-white hover:bg-brand-700"
+          >
+            + Nouveau produit
+          </Link>
+        </div>
       </div>
       <div className="mt-6 overflow-x-auto rounded-2xl bg-white shadow-sm">
         <table className="w-full text-sm">
