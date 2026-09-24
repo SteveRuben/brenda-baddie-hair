@@ -59,7 +59,10 @@ export default async function Catalogue({
     }),
   ]);
 
-  const include = { images: { orderBy: { position: "asc" as const }, take: 1 } };
+  const include = {
+    images: { orderBy: { position: "asc" as const }, take: 2 },
+    variants: { select: { priceUSD: true, priceEUR: true } },
+  };
   let products;
 
   if (params.sort === "popular") {
