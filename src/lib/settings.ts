@@ -5,6 +5,9 @@ export const SETTING_DEFAULTS: Record<string, string> = {
   heroTitle: "Révèle la baddie en toi",
   heroSubtitle:
     "Des perruques premium, une qualité irréprochable et un style qui ne passe jamais inaperçu.",
+  heroImageUrl: "",
+  announcementTitle: "Information",
+  announcementText: "",
   aboutTitle: "Notre histoire",
   aboutText:
     "bree baddie hair est née d'une passion : offrir des perruques d'exception qui subliment chaque femme. Chaque modèle est sélectionné avec exigence pour sa qualité, son confort et son style.",

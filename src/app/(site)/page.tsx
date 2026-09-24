@@ -5,6 +5,17 @@ import ProductCard from "@/components/ProductCard";
 
 export const dynamic = "force-dynamic";
 
+// Mini-rendu : **gras** → <strong>, le reste en texte brut.
+function renderRich(text: string) {
+  return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
+    part.startsWith("**") && part.endsWith("**") && part.length > 4 ? (
+      <strong key={i}>{part.slice(2, -2)}</strong>
+    ) : (
+      <span key={i}>{part}</span>
+    )
+  );
+}
+
 export default async function Home() {
   const [featured, settings] = await Promise.all([
     prisma.product.findMany({
@@ -18,8 +29,20 @@ export default async function Home() {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-gradient-to-br from-brand-700 via-brand-600 to-brand-800 text-white">
-        <div className="mx-auto max-w-6xl px-4 py-20 text-center">
+      <section className="relative overflow-hidden text-white">
+        {settings.heroImageUrl ? (
+          <>
+            <img
+              src={settings.heroImageUrl}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black/55" />
+          </>
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-brand-700 via-brand-600 to-brand-800" />
+        )}
+        <div className="relative mx-auto max-w-6xl px-4 py-20 text-center">
           <h1 className="text-4xl font-extrabold tracking-tight md:text-6xl">
             {settings.heroTitle}
           </h1>
@@ -34,6 +57,16 @@ export default async function Home() {
           </Link>
         </div>
       </section>
+
+      {/* Bloc d'information (configurable dans Paramètres, masqué si vide) */}
+      {settings.announcementText.trim() && (
+        <section className="mx-auto max-w-3xl px-4 py-14 text-center">
+          <h2 className="text-3xl font-extrabold">{settings.announcementTitle}</h2>
+          <p className="mt-6 whitespace-pre-line leading-relaxed text-neutral-600">
+            {renderRich(settings.announcementText)}
+          </p>
+        </section>
+      )}
 
       {/* Produits vedettes */}
       <section className="mx-auto max-w-6xl px-4 py-14">

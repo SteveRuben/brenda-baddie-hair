@@ -2,10 +2,13 @@
 
 import { useState } from "react";
 
-const FIELDS: { key: string; label: string; type: "text" | "textarea" | "number" | "checkbox" }[] = [
+const FIELDS: { key: string; label: string; type: "text" | "textarea" | "number" | "checkbox" | "image" }[] = [
   { key: "siteName", label: "Nom de la boutique", type: "text" },
   { key: "heroTitle", label: "Titre bannière d'accueil", type: "text" },
   { key: "heroSubtitle", label: "Sous-titre bannière d'accueil", type: "textarea" },
+  { key: "heroImageUrl", label: "Image de la bannière d'accueil", type: "image" },
+  { key: "announcementTitle", label: "Titre du bloc d'information (accueil)", type: "text" },
+  { key: "announcementText", label: "Texte du bloc d'information — vide = masqué (**gras** possible)", type: "textarea" },
   { key: "aboutTitle", label: "Titre section À propos", type: "text" },
   { key: "aboutText", label: "Texte section À propos", type: "textarea" },
   { key: "instagramUrl", label: "Lien Instagram", type: "text" },
@@ -25,7 +28,26 @@ const FIELDS: { key: string; label: string; type: "text" | "textarea" | "number"
 export default function SettingsForm({ initial }: { initial: Record<string, string> }) {
   const [form, setForm] = useState(initial);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
+
+  async function uploadHeroImage(file: File) {
+    setUploading(true);
+    setMessage("");
+    try {
+      const data = new FormData();
+      data.append("files", file);
+      const res = await fetch("/api/admin/upload", { method: "POST", body: data });
+      const json = await res.json();
+      if (!res.ok || !json.urls?.[0]) throw new Error(json.error || "Upload impossible.");
+      setForm((f) => ({ ...f, heroImageUrl: json.urls[0] }));
+      setMessage("Image téléversée — n'oubliez pas d'enregistrer.");
+    } catch (e) {
+      setMessage(e instanceof Error ? e.message : "Upload impossible.");
+    } finally {
+      setUploading(false);
+    }
+  }
 
   async function save(e: React.FormEvent) {
     e.preventDefault();
@@ -68,6 +90,53 @@ export default function SettingsForm({ initial }: { initial: Record<string, stri
               />
               {f.label}
             </label>
+          ) : f.type === "image" ? (
+            <div key={f.key} className="block text-sm font-semibold">
+              {f.label}
+              {form[f.key] ? (
+                <img
+                  src={form[f.key]}
+                  alt="Aperçu de la bannière"
+                  className="mt-2 h-32 w-full rounded-lg border border-neutral-200 object-cover"
+                />
+              ) : (
+                <p className="mt-2 text-xs font-normal text-neutral-500">
+                  Aucune image — la bannière garde son dégradé rouge actuel.
+                </p>
+              )}
+              <div className="mt-2 flex flex-wrap items-center gap-3">
+                <label className="cursor-pointer rounded-full bg-neutral-100 px-5 py-2 text-xs font-bold hover:bg-neutral-200">
+                  {uploading ? "Téléversement…" : "Choisir une image"}
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/gif"
+                    className="hidden"
+                    disabled={uploading}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) uploadHeroImage(file);
+                      e.target.value = "";
+                    }}
+                  />
+                </label>
+                {form[f.key] && (
+                  <button
+                    type="button"
+                    onClick={() => setForm({ ...form, [f.key]: "" })}
+                    className="text-xs font-semibold text-red-600 hover:underline"
+                  >
+                    Retirer l'image
+                  </button>
+                )}
+              </div>
+              <input
+                className={inputCls}
+                type="text"
+                placeholder="…ou coller une URL d'image"
+                value={form[f.key] ?? ""}
+                onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
+              />
+            </div>
           ) : (
             <label key={f.key} className="block text-sm font-semibold">
               {f.label}
