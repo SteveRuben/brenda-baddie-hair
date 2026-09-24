@@ -87,7 +87,7 @@ export default async function Collection({
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
-      <h1 className="text-3xl font-extrabold">Collection</h1>
+      <h1 className="text-3xl font-extrabold">Collections</h1>
       <p className="mt-1 text-neutral-500">{products.length} produit(s)</p>
 
       <CollectionFilters

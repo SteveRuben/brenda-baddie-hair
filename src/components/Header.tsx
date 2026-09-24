@@ -17,7 +17,7 @@ export default function Header({ siteName }: { siteName: string }) {
 
   const links: NavItem[] = [
     { href: "/", label: "Accueil" },
-    { href: "/collection", label: "Collection" },
+    { href: "/collection", label: "Collections" },
     { href: "/contact", label: "Contact" },
   ];
 

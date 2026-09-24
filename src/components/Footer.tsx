@@ -60,7 +60,7 @@ export default async function Footer() {
           <ul className="mt-2 space-y-1 text-sm">
             <li>
               <Link href="/collection" className={linkCls}>
-                Collection
+                Collections
               </Link>
             </li>
             <li>
