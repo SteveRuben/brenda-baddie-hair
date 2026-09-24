@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useCart } from "@/lib/cart";
 import { BagIcon } from "./CartDrawer";
@@ -11,6 +12,27 @@ export default function Header() {
   const role = (session?.user as { role?: string } | undefined)?.role;
   const isCustomer = role === "customer";
   const isLoggedIn = !!session?.user;
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const links: NavItem[] = [
+    { href: "/", label: "Accueil" },
+    { href: "/catalogue", label: "Catalogue" },
+    { href: "/contact", label: "Contact" },
+  ];
+
+  interface NavItem {
+    href: string;
+    label: string;
+    action?: () => void;
+  }
+
+  const accountLinks: NavItem[] = isCustomer
+    ? [
+        { href: "/compte", label: "Mon compte" },
+        { href: "#deconnexion", label: "Déconnexion", action: () => signOut({ callbackUrl: "/" }) },
+      ]
+    : [{ href: "/compte/connexion", label: isLoggedIn ? "Mon compte" : "Se connecter" }];
+
   return (
     <div className="sticky top-0 z-40">
       {/* Barre utilitaire au-dessus du header : panier à droite */}
@@ -29,46 +51,84 @@ export default function Header() {
                 {count}
               </span>
             </span>
-            <span className="text-xs font-bold uppercase tracking-wide">
-              Panier
-            </span>
+            <span className="text-xs font-bold uppercase tracking-wide">Panier</span>
           </button>
         </div>
       </div>
       <header className="border-b border-brand-100 bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-          <Link href="/" className="text-xl font-extrabold tracking-tight text-brand-700">
+          <Link
+            href="/"
+            className="whitespace-nowrap text-lg font-extrabold tracking-tight text-brand-700 md:text-xl"
+          >
             Brenda <span className="text-brand-500">Baddie</span> Hair
           </Link>
-          <nav className="flex items-center gap-5 text-sm font-medium">
-            <Link href="/" className="hover:text-brand-600">
-              Accueil
-            </Link>
-            <Link href="/catalogue" className="hover:text-brand-600">
-              Catalogue
-            </Link>
-            <Link href="/#contact" className="hover:text-brand-600">
-              Contact
-            </Link>
-            {isCustomer ? (
-              <>
-                <Link href="/compte" className="hover:text-brand-600">
-                  Mon compte
-                </Link>
-                <button
-                  onClick={() => signOut({ callbackUrl: "/" })}
-                  className="hover:text-brand-600"
-                >
-                  Déconnexion
-                </button>
-              </>
-            ) : (
-              <Link href="/compte/connexion" className="hover:text-brand-600">
-                {isLoggedIn ? "Mon compte" : "Se connecter"}
+          {/* Navigation bureau */}
+          <nav className="hidden items-center gap-5 text-sm font-medium md:flex">
+            {links.map((l) => (
+              <Link key={l.href} href={l.href} className="hover:text-brand-600">
+                {l.label}
               </Link>
+            ))}
+            {accountLinks.map((l) =>
+              l.action ? (
+                <button key={l.label} onClick={l.action} className="hover:text-brand-600">
+                  {l.label}
+                </button>
+              ) : (
+                <Link key={l.href} href={l.href} className="hover:text-brand-600">
+                  {l.label}
+                </Link>
+              )
             )}
           </nav>
+          {/* Bouton hamburger (mobile) */}
+          <button
+            type="button"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+            aria-expanded={menuOpen}
+            className="rounded-lg p-2 text-brand-700 hover:bg-brand-50 md:hidden"
+          >
+            {menuOpen ? (
+              <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+                <path d="M4 7h16M4 12h16M4 17h16" />
+              </svg>
+            )}
+          </button>
         </div>
+        {/* Menu mobile déroulant */}
+        {menuOpen && (
+          <nav className="border-t border-brand-100 bg-white px-4 py-3 md:hidden">
+            {[...links, ...accountLinks].map((l) =>
+              l.action ? (
+                <button
+                  key={l.label}
+                  onClick={() => {
+                    setMenuOpen(false);
+                    l.action?.();
+                  }}
+                  className="block w-full rounded-lg px-3 py-2.5 text-left text-base font-medium hover:bg-brand-50 hover:text-brand-600"
+                >
+                  {l.label}
+                </button>
+              ) : (
+                <Link
+                  key={l.href + l.label}
+                  href={l.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="block rounded-lg px-3 py-2.5 text-base font-medium hover:bg-brand-50 hover:text-brand-600"
+                >
+                  {l.label}
+                </Link>
+              )
+            )}
+          </nav>
+        )}
       </header>
     </div>
   );

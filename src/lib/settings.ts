@@ -12,7 +12,7 @@ export const SETTING_DEFAULTS: Record<string, string> = {
   tiktokUrl: "",
   facebookUrl: "",
   youtubeUrl: "",
-  whatsappNumber: "",
+  whatsappNumber: "33659183821",
   whatsappChatEnabled: "true",
   whatsappChatMessage: "Bonjour Brenda Baddie Hair, j'ai une question !",
   contactEmail: "",
