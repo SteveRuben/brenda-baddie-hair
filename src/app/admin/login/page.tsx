@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function AdminLogin() {
   const router = useRouter();
@@ -10,6 +11,14 @@ export default function AdminLogin() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [setupNeeded, setSetupNeeded] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/admin/setup")
+      .then((r) => r.json())
+      .then((d) => setSetupNeeded((d as { needed?: boolean }).needed === true))
+      .catch(() => {});
+  }, []);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -31,6 +40,14 @@ export default function AdminLogin() {
         <h1 className="text-2xl font-extrabold text-brand-700">Backoffice</h1>
         <p className="mt-1 text-sm text-neutral-500">Brenda Baddie Hair — Administration</p>
         {error && <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm font-semibold text-red-700">{error}</p>}
+        {setupNeeded && (
+          <p className="mt-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-800">
+            Aucun compte administrateur pour le moment.{" "}
+            <Link href="/admin/setup" className="font-bold underline hover:text-amber-900">
+              Créer le premier compte
+            </Link>
+          </p>
+        )}
         <label className="mt-6 block text-sm font-semibold">
           Email
           <input
