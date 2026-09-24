@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { DEMO_PRODUCTS } from "../src/lib/demo-products";
+import { applyDemoProduct } from "../src/lib/demo-seed";
 
 const prisma = new PrismaClient();
 
@@ -25,20 +26,9 @@ async function main() {
   }
 
   for (const p of DEMO_PRODUCTS) {
-    const { images = [], ...data } = p;
-    const product = await prisma.product.upsert({
-      where: { slug: p.slug },
-      update: {},
-      create: data,
-    });
-    if (images.length > 0) {
-      await prisma.productImage.deleteMany({ where: { productId: product.id } });
-      await prisma.productImage.createMany({
-        data: images.map((url, i) => ({ url, position: i, productId: product.id })),
-      });
-    }
+    await applyDemoProduct(p);
   }
-  console.log(`✓ ${DEMO_PRODUCTS.length} produits de démo créés`);
+  console.log(`✓ ${DEMO_PRODUCTS.length} produits de démo créés / mis à jour (variantes incluses)`);
 }
 
 main()

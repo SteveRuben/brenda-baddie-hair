@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { DEMO_PRODUCTS } from "@/lib/demo-products";
+import { applyDemoProduct } from "@/lib/demo-seed";
 import { rateLimit, rateLimitKey, isSameOrigin } from "@/lib/security";
 
 export const dynamic = "force-dynamic";
@@ -64,17 +65,7 @@ export async function POST(req: Request) {
     let seeded = 0;
     if (seedProducts && (await prisma.product.count()) === 0) {
       for (const p of DEMO_PRODUCTS) {
-        const { images = [], ...data } = p;
-        const product = await prisma.product.upsert({
-          where: { slug: p.slug },
-          update: {},
-          create: data,
-        });
-        if (images.length > 0) {
-          await prisma.productImage.createMany({
-            data: images.map((url, i) => ({ url, position: i, productId: product.id })),
-          });
-        }
+        await applyDemoProduct(p);
       }
       seeded = DEMO_PRODUCTS.length;
     }
