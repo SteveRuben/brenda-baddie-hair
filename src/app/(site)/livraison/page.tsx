@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getSettings } from "@/lib/settings";
 
 export const metadata: Metadata = {
-  title: "Livraison — Brenda Baddie Hair",
+  title: "Livraison — bree baddie hair",
   description:
     "Informations sur la livraison de vos perruques : délais, suivi et frais.",
 };

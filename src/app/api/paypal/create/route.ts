@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createPaypalOrder, paypalConfigured } from "@/lib/paypal";
+import { getSetting } from "@/lib/settings";
 import { isSameOrigin, rateLimit, rateLimitKey } from "@/lib/security";
 
 export async function POST(req: Request) {
@@ -16,7 +17,8 @@ export async function POST(req: Request) {
     const order = await prisma.order.findUnique({ where: { id: orderId } });
     if (!order) return NextResponse.json({ error: "Commande introuvable." }, { status: 404 });
 
-    const result = await createPaypalOrder(order.totalUSD.toFixed(2), order.number);
+    const siteName = await getSetting("siteName");
+    const result = await createPaypalOrder(order.totalUSD.toFixed(2), order.number, siteName);
     const paypalOrderId = result.id;
     if (!paypalOrderId) {
       return NextResponse.json({ error: "PayPal n'a pas créé la transaction." }, { status: 500 });

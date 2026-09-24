@@ -24,7 +24,7 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
     slug: "baddie-lisse-premium-22",
     description:
       "Perruque lisse premium en fibres haute qualité, effet naturel et brillance soyeuse. Bonnet ajustable confortable.",
-    brand: "Brenda Baddie Hair",
+    brand: "bree baddie hair",
     color: "Noir naturel",
     size: '22"',
     priceUSD: 89,
@@ -38,7 +38,7 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
     slug: "curly-queen-20",
     description:
       "Boucles définies et volumineuses pour un look irrésistible. Facile d'entretien, tient toute la journée.",
-    brand: "Brenda Baddie Hair",
+    brand: "bree baddie hair",
     color: "Noir",
     size: '20"',
     priceUSD: 95,
@@ -52,7 +52,7 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
     slug: "body-wave-luxe-24",
     description:
       "Ondulations naturelles effet wavy, mouvement fluide et volume maîtrisé. La préférée des baddies.",
-    brand: "Brenda Baddie Hair",
+    brand: "bree baddie hair",
     color: "Châtain",
     size: '24"',
     priceUSD: 110,
@@ -71,7 +71,7 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
     slug: "bob-chic-12",
     description:
       "Carré chic et moderne, coupe nette et élégante. Parfait pour un look sophistiqué au quotidien.",
-    brand: "Brenda Baddie Hair",
+    brand: "bree baddie hair",
     color: "Noir naturel",
     size: '12"',
     priceUSD: 65,

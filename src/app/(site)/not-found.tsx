@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export const metadata = { title: "Page introuvable — Brenda Baddie Hair" };
+export const metadata = { title: "Page introuvable — bree baddie hair" };
 
 export default function SiteNotFound() {
   return (

@@ -22,7 +22,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const whatsapp =
     (await getSetting("whatsappNumber")) || process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
   const waText = encodeURIComponent(
-    `Bonjour Brenda Baddie Hair, je suis intéressée par : ${product.name}`
+    `Bonjour bree baddie hair, je suis intéressée par : ${product.name}`
   );
 
   return (

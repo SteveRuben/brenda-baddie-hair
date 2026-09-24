@@ -19,7 +19,7 @@ function paypalClient() {
   });
 }
 
-export async function createPaypalOrder(totalUSD: string, reference: string) {
+export async function createPaypalOrder(totalUSD: string, reference: string, siteName: string) {
   const controller = new OrdersController(paypalClient());
   const { result } = await controller.createOrder({
     body: {
@@ -28,7 +28,7 @@ export async function createPaypalOrder(totalUSD: string, reference: string) {
         {
           referenceId: reference,
           amount: { currencyCode: "USD", value: totalUSD },
-          description: `Brenda Baddie Hair — Commande ${reference}`,
+          description: `${siteName} — Commande ${reference}`,
         },
       ],
     },

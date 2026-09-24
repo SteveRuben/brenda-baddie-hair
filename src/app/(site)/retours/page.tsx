@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Retours & échanges — Brenda Baddie Hair",
+  title: "Retours & échanges — bree baddie hair",
   description:
     "Notre politique de retours et d'échanges : délai de 14 jours, conditions et remboursement.",
 };

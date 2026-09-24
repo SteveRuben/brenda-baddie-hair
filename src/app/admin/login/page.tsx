@@ -38,7 +38,7 @@ export default function AdminLogin() {
     <div className="flex min-h-[70vh] items-center justify-center px-4">
       <form onSubmit={submit} className="w-full max-w-sm rounded-2xl border border-neutral-100 bg-white p-8 shadow-lg">
         <h1 className="text-2xl font-extrabold text-brand-700">Backoffice</h1>
-        <p className="mt-1 text-sm text-neutral-500">Brenda Baddie Hair — Administration</p>
+        <p className="mt-1 text-sm text-neutral-500">bree baddie hair — Administration</p>
         {error && <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm font-semibold text-red-700">{error}</p>}
         {setupNeeded && (
           <p className="mt-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-800">

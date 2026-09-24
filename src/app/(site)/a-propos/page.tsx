@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "À propos — Brenda Baddie Hair",
+  title: "À propos — bree baddie hair",
   description:
-    "Découvrez l'histoire et la mission de Brenda Baddie Hair : des perruques premium qui subliment chaque femme.",
+    "Découvrez l'histoire et la mission de bree baddie hair : des perruques premium qui subliment chaque femme.",
 };
 
 export default function AProposPage() {
@@ -12,7 +12,7 @@ export default function AProposPage() {
       <h1 className="text-3xl font-extrabold">À propos de nous</h1>
       <div className="mt-6 space-y-5 leading-relaxed text-neutral-700">
         <p>
-          <strong className="text-neutral-900">Brenda Baddie Hair</strong> est née
+          <strong className="text-neutral-900">bree baddie hair</strong> est née
           d'une conviction simple : chaque femme mérite de se sentir belle,
           confiante et irrésistible, tous les jours. Nous avons fait de cette
           conviction notre mission en sélectionnant des perruques d'exception,
@@ -48,7 +48,7 @@ export default function AProposPage() {
         </ul>
         <p>
           Merci de votre confiance. Bienvenue dans la famille{" "}
-          <strong className="text-neutral-900">Brenda Baddie Hair</strong> — révélez
+          <strong className="text-neutral-900">bree baddie hair</strong> — révélez
           la baddie en vous.
         </p>
       </div>

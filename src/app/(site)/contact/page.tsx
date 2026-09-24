@@ -3,9 +3,9 @@ import { getSettings } from "@/lib/settings";
 import { WhatsappIcon } from "@/components/SocialIcons";
 
 export const metadata: Metadata = {
-  title: "Contact — Brenda Baddie Hair",
+  title: "Contact — bree baddie hair",
   description:
-    "Contactez Brenda Baddie Hair : WhatsApp, email et horaires du service client.",
+    "Contactez bree baddie hair : WhatsApp, email et horaires du service client.",
 };
 
 export const dynamic = "force-dynamic";
@@ -15,7 +15,7 @@ export default async function ContactPage() {
   const whatsapp = settings.whatsappNumber || process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
   const email = settings.contactEmail;
   const waText = encodeURIComponent(
-    settings.whatsappChatMessage || "Bonjour Brenda Baddie Hair, j'ai une question !"
+    settings.whatsappChatMessage || "Bonjour bree baddie hair, j'ai une question !"
   );
 
   return (

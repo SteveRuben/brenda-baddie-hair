@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export const metadata = { title: "Page introuvable — BBH Admin", robots: "noindex" };
+export const metadata = { title: "Page introuvable — bree baddie hair", robots: "noindex" };
 
 export default function RootNotFound() {
   return (

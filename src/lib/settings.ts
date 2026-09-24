@@ -1,20 +1,20 @@
 import { prisma } from "./prisma";
 
 export const SETTING_DEFAULTS: Record<string, string> = {
-  siteName: "Brenda Baddie Hair",
+  siteName: "bree baddie hair",
   heroTitle: "Révèle la baddie en toi",
   heroSubtitle:
     "Des perruques premium, une qualité irréprochable et un style qui ne passe jamais inaperçu.",
   aboutTitle: "Notre histoire",
   aboutText:
-    "Brenda Baddie Hair est née d'une passion : offrir des perruques d'exception qui subliment chaque femme. Chaque modèle est sélectionné avec exigence pour sa qualité, son confort et son style.",
+    "bree baddie hair est née d'une passion : offrir des perruques d'exception qui subliment chaque femme. Chaque modèle est sélectionné avec exigence pour sa qualité, son confort et son style.",
   instagramUrl: "",
   tiktokUrl: "",
   facebookUrl: "",
   youtubeUrl: "",
   whatsappNumber: "33659183821",
   whatsappChatEnabled: "true",
-  whatsappChatMessage: "Bonjour Brenda Baddie Hair, j'ai une question !",
+  whatsappChatMessage: "Bonjour bree baddie hair, j'ai une question !",
   contactEmail: "",
   shippingFeeUSD: "0",
   shippingFeeEUR: "0",

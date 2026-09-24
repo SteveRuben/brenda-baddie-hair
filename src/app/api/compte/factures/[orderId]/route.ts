@@ -45,7 +45,7 @@ export async function GET(
   }
 
   const settings = await getSettings();
-  const siteName = settings.siteName || "Brenda Baddie Hair";
+  const siteName = settings.siteName || "bree baddie hair";
 
   const doc = new PDFDocument({ margin: 50, size: "A4" });
   const chunks: Buffer[] = [];

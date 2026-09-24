@@ -6,7 +6,21 @@ import { useSession, signOut } from "next-auth/react";
 import { useCart } from "@/lib/cart";
 import { BagIcon } from "./CartDrawer";
 
-export default function Header() {
+// Nom de la boutique avec le mot central en rouge (ex. "bree baddie hair").
+// Si le nom n'a pas 3 mots, affichage simple.
+function BrandName({ name }: { name: string }) {
+  const words = name.trim().split(/\s+/);
+  if (words.length === 3) {
+    return (
+      <>
+        {words[0]} <span className="text-brand-500">{words[1]}</span> {words[2]}
+      </>
+    );
+  }
+  return <>{name}</>;
+}
+
+export default function Header({ siteName }: { siteName: string }) {
   const { count, openCart } = useCart();
   const { data: session } = useSession();
   const role = (session?.user as { role?: string } | undefined)?.role;
@@ -61,7 +75,7 @@ export default function Header() {
             href="/"
             className="whitespace-nowrap text-lg font-extrabold tracking-tight text-brand-700 md:text-xl"
           >
-            Brenda <span className="text-brand-500">Baddie</span> Hair
+            <BrandName name={siteName} />
           </Link>
           {/* Navigation bureau */}
           <nav className="hidden items-center gap-5 text-sm font-medium md:flex">
