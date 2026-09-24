@@ -89,7 +89,8 @@ export async function POST(req: Request) {
         if (variant) {
           if (variant.priceUSD != null) priceUSD = variant.priceUSD;
           if (variant.priceEUR != null) priceEUR = variant.priceEUR;
-          name = `${product.name} — ${variant.name}`;
+          const vLabel = variant.type?.trim() ? `${variant.type.trim()}, ${variant.name}` : variant.name;
+          name = `${product.name} — ${vLabel}`;
         }
       }
       if (product.stock < qty) {

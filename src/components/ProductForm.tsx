@@ -6,6 +6,7 @@ import { slugify } from "@/lib/format";
 
 interface VariantInput {
   name: string;
+  type: string;
   priceUSD: string;
   priceEUR: string;
   stock: string;
@@ -94,6 +95,7 @@ export default function ProductForm({ initial }: { initial?: Partial<ProductForm
           .filter((v) => v.name.trim() !== "")
           .map((v) => ({
             name: v.name.trim(),
+            type: v.type.trim(),
             priceUSD: v.priceUSD !== "" ? Number(v.priceUSD) : null,
             priceEUR: v.priceEUR !== "" ? Number(v.priceEUR) : null,
             stock: Number(v.stock || 0),
@@ -217,16 +219,26 @@ export default function ProductForm({ initial }: { initial?: Partial<ProductForm
       </div>
 
       <div className="mt-6">
-        <p className={labelCls}>Variantes (optionnel — ex. couleur, taille)</p>
+        <p className={labelCls}>Variantes (optionnel — ex. type + taille)</p>
         <p className="mt-1 text-xs text-neutral-500">
-          Laissez les prix vides pour utiliser le prix de base du produit.
+          Type (ex. Glueless, Frontal) puis taille (ex. 22 pouces). Laissez les prix vides pour utiliser le prix de base du produit.
         </p>
         <div className="mt-2 space-y-2">
           {form.variants.map((v, i) => (
             <div key={i} className="grid grid-cols-12 items-center gap-2">
               <input
-                className={`${inputCls} col-span-4`}
-                placeholder="Nom (ex. 22 pouces)"
+                className={`${inputCls} col-span-2`}
+                placeholder="Type (ex. Glueless)"
+                value={v.type}
+                onChange={(e) => {
+                  const variants = [...form.variants];
+                  variants[i] = { ...variants[i], type: e.target.value };
+                  set("variants", variants);
+                }}
+              />
+              <input
+                className={`${inputCls} col-span-3`}
+                placeholder="Taille (ex. 22 pouces)"
                 value={v.name}
                 onChange={(e) => {
                   const variants = [...form.variants];
@@ -261,7 +273,7 @@ export default function ProductForm({ initial }: { initial?: Partial<ProductForm
                 }}
               />
               <input
-                className={`${inputCls} col-span-3`}
+                className={`${inputCls} col-span-2`}
                 type="number"
                 min="0"
                 placeholder="Stock"
@@ -285,7 +297,7 @@ export default function ProductForm({ initial }: { initial?: Partial<ProductForm
           <button
             type="button"
             onClick={() =>
-              set("variants", [...form.variants, { name: "", priceUSD: "", priceEUR: "", stock: "0" }])
+              set("variants", [...form.variants, { name: "", type: "", priceUSD: "", priceEUR: "", stock: "0" }])
             }
             className="rounded-full border border-brand-300 px-4 py-2 text-sm font-bold text-brand-700 hover:bg-brand-50"
           >

@@ -81,6 +81,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 variants: product.variants.map((v) => ({
                   id: v.id,
                   name: v.name,
+                  type: v.type ?? null,
                   priceUSD: v.priceUSD,
                   priceEUR: v.priceEUR,
                   stock: v.stock,

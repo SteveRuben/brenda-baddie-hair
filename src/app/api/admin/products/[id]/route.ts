@@ -30,8 +30,9 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
         },
         variants: {
           create: (data.variants ?? []).map(
-            (v: { name: string; priceUSD: number | null; priceEUR: number | null; stock: number }) => ({
+            (v: { name: string; type?: string | null; priceUSD: number | null; priceEUR: number | null; stock: number }) => ({
               name: v.name,
+              type: v.type?.trim() ? v.type.trim() : null,
               priceUSD: v.priceUSD,
               priceEUR: v.priceEUR,
               stock: Number(v.stock ?? 0),

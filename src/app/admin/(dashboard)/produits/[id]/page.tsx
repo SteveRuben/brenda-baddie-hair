@@ -32,6 +32,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
         images: product.images.map((i) => i.url),
         variants: product.variants.map((v) => ({
           name: v.name,
+          type: v.type ?? "",
           priceUSD: v.priceUSD != null ? String(v.priceUSD) : "",
           priceEUR: v.priceEUR != null ? String(v.priceEUR) : "",
           stock: String(v.stock),
