@@ -27,14 +27,14 @@ export default async function Footer() {
     },
   ].filter((s) => s.href);
 
-  const linkCls = "hover:text-white";
+  const linkCls = "text-ink-500 transition hover:text-ink-950";
 
   return (
-    <footer className="mt-16 bg-brand-900 text-brand-100">
+    <footer className="mt-16 border-t border-ink-200 bg-white text-ink-600">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2 md:grid-cols-4">
         <div>
-          <Logo name={settings.siteName} variant="dark" />
-          <p className="mt-2 text-sm text-brand-200">
+          <Logo name={settings.siteName} variant="light" />
+          <p className="mt-2 text-sm text-ink-500">
             Des perruques premium pour révéler la baddie en vous. Qualité, style
             et confiance.
           </p>
@@ -48,7 +48,7 @@ export default async function Footer() {
                   rel="noreferrer"
                   aria-label={label}
                   title={label}
-                  className="text-brand-200 transition hover:text-white"
+                  className="text-ink-500 transition hover:text-ink-950"
                 >
                   <Icon size={20} />
                 </a>
@@ -60,7 +60,7 @@ export default async function Footer() {
           </div>
         </div>
         <div>
-          <p className="font-bold text-white">Boutique</p>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-ink-950">Boutique</p>
           <ul className="mt-2 space-y-1 text-sm">
             <li>
               <Link href="/collection" className={linkCls}>
@@ -80,7 +80,7 @@ export default async function Footer() {
           </ul>
         </div>
         <div>
-          <p className="font-bold text-white">Aide</p>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-ink-950">Aide</p>
           <ul className="mt-2 space-y-1 text-sm">
             <li>
               <Link href="/a-propos" className={linkCls}>
@@ -120,7 +120,7 @@ export default async function Footer() {
           </ul>
         </div>
         <div id="contact">
-          <p className="font-bold text-white">Contact</p>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-ink-950">Contact</p>
           <ul className="mt-2 space-y-1 text-sm">
             {whatsapp && (
               <li>
@@ -141,11 +141,11 @@ export default async function Footer() {
                 </a>
               </li>
             )}
-            <li className="text-brand-200">Lun – Sam, 9h à 18h</li>
+            <li className="text-ink-500">Lun – Sam, 9h à 18h</li>
           </ul>
         </div>
       </div>
-      <div className="border-t border-brand-800 py-4 text-center text-xs text-brand-200">
+      <div className="border-t border-ink-200 py-4 text-center text-xs text-ink-400">
         © {new Date().getFullYear()} {settings.siteName} — Tous droits réservés.
       </div>
     </footer>

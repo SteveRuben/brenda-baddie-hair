@@ -49,7 +49,7 @@ export default async function ComptePage() {
           {customer.orders.length === 0 ? (
             <p className="mt-3 text-sm text-neutral-500">
               Vous n'avez pas encore passé de commande.{" "}
-              <Link href="/collection" className="font-semibold text-brand-600 hover:underline">
+              <Link href="/collection" className="font-semibold text-ink-900 hover:underline">
                 Découvrir la collection
               </Link>
             </p>
@@ -58,12 +58,12 @@ export default async function ComptePage() {
               {customer.orders.map((o) => (
                 <li
                   key={o.id}
-                  className="rounded-xl border border-neutral-100 p-4 transition hover:border-brand-200"
+                  className="rounded-xl border border-neutral-100 p-4 transition hover:border-ink-300"
                 >
                   <div className="flex items-center justify-between gap-2">
                     <Link
                       href={`/compte/commandes/${o.id}`}
-                      className="font-bold text-brand-700 hover:underline"
+                      className="font-bold text-ink-950 hover:underline"
                     >
                       {o.number}
                     </Link>

@@ -40,14 +40,14 @@ export default function NewsletterForm({ variant = "section" }: Props) {
   if (variant === "footer") {
     return (
       <div>
-        <h3 className="font-extrabold uppercase tracking-wide">
+        <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-ink-950">
           Inscrivez-vous à la newsletter
         </h3>
-        <p className="mt-2 text-sm text-neutral-400">
+        <p className="mt-2 text-sm text-ink-500">
           Soyez la première informée de nos nouveautés et offres exclusives.
         </p>
         {status === "done" ? (
-          <p className="mt-3 text-sm font-semibold text-brand-400">{message}</p>
+          <p className="mt-3 text-sm font-semibold text-ink-900">{message}</p>
         ) : (
           <form onSubmit={submit} className="mt-3">
             <div className="flex gap-2">
@@ -58,18 +58,18 @@ export default function NewsletterForm({ variant = "section" }: Props) {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Votre adresse email"
                 aria-label="Adresse email"
-                className="min-w-0 flex-1 rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder:text-neutral-400 focus:border-brand-400 focus:outline-none"
+                className="min-w-0 flex-1 rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 placeholder:text-ink-400 focus:border-ink-950 focus:outline-none"
               />
               <button
                 type="submit"
                 disabled={status === "loading"}
-                className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-brand-700 disabled:opacity-60"
+                className="rounded-lg bg-ink-950 px-4 py-2 text-sm font-bold text-white transition hover:bg-ink-800 disabled:opacity-60"
               >
                 {status === "loading" ? "…" : "OK"}
               </button>
             </div>
             {status === "error" && (
-              <p className="mt-2 text-sm text-red-400">{message}</p>
+              <p className="mt-2 text-sm text-red-600">{message}</p>
             )}
           </form>
         )}
@@ -78,7 +78,7 @@ export default function NewsletterForm({ variant = "section" }: Props) {
   }
 
   return (
-    <section className="bg-brand-50">
+    <section className="bg-ink-50">
       <div className="mx-auto max-w-2xl px-4 py-14 text-center">
         <h2 className="text-2xl font-extrabold uppercase tracking-wide">
           Restez informée
@@ -100,12 +100,12 @@ export default function NewsletterForm({ variant = "section" }: Props) {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Votre adresse email"
               aria-label="Adresse email"
-              className="min-w-0 flex-1 rounded-full border border-neutral-300 bg-white px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none"
+              className="min-w-0 flex-1 rounded-full border border-neutral-300 bg-white px-4 py-2.5 text-sm focus:border-ink-950 focus:outline-none"
             />
             <button
               type="submit"
               disabled={status === "loading"}
-              className="rounded-full bg-brand-600 px-6 py-2.5 text-sm font-bold text-white transition hover:bg-brand-700 disabled:opacity-60"
+              className="rounded-full bg-ink-950 px-6 py-2.5 text-sm font-bold text-white transition hover:bg-ink-800 disabled:opacity-60"
             >
               {status === "loading" ? "…" : "S'inscrire"}
             </button>

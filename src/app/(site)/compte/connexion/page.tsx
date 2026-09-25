@@ -6,7 +6,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 const inputCls =
-  "mt-1 w-full rounded-lg border border-neutral-200 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none";
+  "mt-1 w-full rounded-lg border border-neutral-200 px-3 py-2.5 text-sm focus:border-ink-950 focus:outline-none";
 
 export default function ConnexionPage() {
   const router = useRouter();
@@ -35,7 +35,7 @@ export default function ConnexionPage() {
         onSubmit={submit}
         className="w-full max-w-sm rounded-2xl border border-neutral-100 bg-white p-8 shadow-lg"
       >
-        <h1 className="text-2xl font-extrabold text-brand-700">Mon compte</h1>
+        <h1 className="text-2xl font-extrabold text-ink-950">Mon compte</h1>
         <p className="mt-1 text-sm text-neutral-500">Connectez-vous pour suivre vos commandes.</p>
         {error && (
           <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm font-semibold text-red-700">{error}</p>
@@ -63,13 +63,13 @@ export default function ConnexionPage() {
         <button
           type="submit"
           disabled={loading}
-          className="mt-6 w-full rounded-full bg-brand-600 py-3 font-bold text-white hover:bg-brand-700 disabled:bg-neutral-300"
+          className="mt-6 w-full rounded-full bg-ink-950 py-3 font-bold text-white hover:bg-ink-800 disabled:bg-neutral-300"
         >
           {loading ? "Connexion…" : "Se connecter"}
         </button>
         <p className="mt-4 text-center text-sm text-neutral-500">
           Pas encore de compte ?{" "}
-          <Link href="/compte/inscription" className="font-semibold text-brand-600 hover:underline">
+          <Link href="/compte/inscription" className="font-semibold text-ink-900 hover:underline">
             Créer un compte
           </Link>
         </p>

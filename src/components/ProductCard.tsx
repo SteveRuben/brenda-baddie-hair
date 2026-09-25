@@ -30,7 +30,7 @@ export default function ProductCard({ product }: { product: CardProduct }) {
 
   return (
     <Link href={`/produit/${product.slug}`} className="group block">
-      <div className="relative aspect-[3/4] overflow-hidden bg-brand-50">
+      <div className="relative aspect-[3/4] overflow-hidden bg-ink-50">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={image}
@@ -47,7 +47,7 @@ export default function ProductCard({ product }: { product: CardProduct }) {
         )}
       </div>
       <div className="pt-3 text-center">
-        <h3 className="text-sm font-bold uppercase tracking-wide group-hover:text-brand-700">
+        <h3 className="text-sm font-bold uppercase tracking-wide group-hover:text-ink-950">
           {product.name}
         </h3>
         {product.color && <p className="mt-0.5 text-xs text-neutral-500">{product.color}</p>}

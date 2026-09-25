@@ -24,7 +24,7 @@ export default function CartPage() {
         <p className="mt-2 text-neutral-500">Découvrez nos perruques premium.</p>
         <Link
           href="/collection"
-          className="mt-6 inline-block rounded-full bg-brand-600 px-8 py-3 font-bold text-white hover:bg-brand-700"
+          className="mt-6 inline-block rounded-full bg-ink-950 px-8 py-3 font-bold text-white hover:bg-ink-800"
         >
           Voir la collection
         </Link>
@@ -45,10 +45,10 @@ export default function CartPage() {
             <img
               src={item.image ?? "/images/placeholder.svg"}
               alt={item.name}
-              className="h-24 w-24 rounded-xl bg-brand-50 object-cover"
+              className="h-24 w-24 rounded-xl bg-ink-50 object-cover"
             />
             <div className="flex-1">
-              <Link href={`/produit/${item.slug}`} className="font-bold hover:text-brand-700">
+              <Link href={`/produit/${item.slug}`} className="font-bold hover:text-ink-950">
                 {item.name}
               </Link>
               <p className="text-sm text-neutral-500">
@@ -70,20 +70,20 @@ export default function CartPage() {
                 </button>
                 <button
                   onClick={() => removeItem(item.productId, item.variantId)}
-                  className="ml-2 text-sm text-red-600 hover:underline"
+                  className="ml-2 text-sm text-ink-500 hover:text-ink-950 hover:underline"
                 >
                   Retirer
                 </button>
               </div>
             </div>
-            <p className="font-extrabold text-brand-700">
+            <p className="font-extrabold text-ink-950">
               {format(item.priceUSD * item.quantity, item.priceEUR * item.quantity)}
             </p>
           </div>
         ))}
       </div>
 
-      <div className="mt-8 rounded-2xl bg-brand-50 p-6">
+      <div className="mt-8 rounded-2xl bg-ink-50 p-6">
         <div className="flex justify-between text-sm">
           <span>Sous-total</span>
           <span className="font-semibold">
@@ -96,15 +96,15 @@ export default function CartPage() {
             {format(shipping.usd, shipping.eur)}
           </span>
         </div>
-        <div className="mt-3 flex justify-between border-t border-brand-100 pt-3 text-lg font-extrabold">
+        <div className="mt-3 flex justify-between border-t border-ink-200 pt-3 text-lg font-extrabold">
           <span>Total estimé</span>
-          <span className="text-brand-700">
+          <span className="text-ink-950">
             {format(subtotalUSD + shipping.usd, subtotalEUR + shipping.eur)}
           </span>
         </div>
         <Link
           href="/commande"
-          className="mt-4 block rounded-full bg-brand-600 py-3 text-center font-bold text-white hover:bg-brand-700"
+          className="mt-4 block rounded-full bg-ink-950 py-3 text-center font-bold text-white hover:bg-ink-800"
         >
           Passer commande
         </Link>

@@ -41,7 +41,7 @@ export default function RetoursPage() {
         <ol className="list-decimal space-y-2 pl-6">
           <li>
             Contactez-nous via{" "}
-            <Link href="/contact" className="font-semibold text-brand-700 hover:underline">
+            <Link href="/contact" className="font-semibold text-ink-950 hover:underline">
               la page contact
             </Link>{" "}
             en indiquant votre numéro de commande.

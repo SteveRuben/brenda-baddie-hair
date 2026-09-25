@@ -60,11 +60,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
         <div>
           {product.category && (
-            <p className="text-sm font-semibold uppercase tracking-wide text-brand-500">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-ink-500">
               {product.category.name}
             </p>
           )}
-          <h1 className="mt-1 text-3xl font-extrabold">{product.name}</h1>
+          <h1 className="mt-2 font-display text-4xl tracking-tight">{product.name}</h1>
 
           <div className="mt-3">
             <ProductPurchase
@@ -103,7 +103,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               href={`https://wa.me/${whatsapp}?text=${waText}`}
               target="_blank"
               rel="noreferrer"
-              className="mt-3 inline-block rounded-full border-2 border-brand-600 px-6 py-2.5 font-bold text-brand-700 transition hover:bg-brand-50"
+              className="mt-3 inline-block rounded-full border-2 border-ink-950 px-6 py-2.5 font-bold text-ink-950 transition hover:bg-ink-100"
             >
               Commander via WhatsApp
             </a>

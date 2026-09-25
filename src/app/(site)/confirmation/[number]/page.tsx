@@ -24,10 +24,10 @@ export default async function ConfirmationPage({
       </div>
       <h1 className="mt-4 text-3xl font-extrabold">Merci {order.customer.firstName} !</h1>
       <p className="mt-2 text-neutral-600">
-        Votre commande <span className="font-bold text-brand-700">{order.number}</span> est
+        Votre commande <span className="font-bold text-ink-950">{order.number}</span> est
         confirmée. Un email récapitulatif vous sera envoyé.
       </p>
-      <div className="mt-8 rounded-2xl bg-brand-50 p-6 text-left">
+      <div className="mt-8 rounded-2xl bg-ink-50 p-6 text-left">
         <h2 className="font-bold">Détail de la commande</h2>
         <div className="mt-3 space-y-2 text-sm">
           {order.items.map((i) => (
@@ -38,9 +38,9 @@ export default async function ConfirmationPage({
               <span className="font-semibold">{formatUSD(i.priceUSD * i.quantity)}</span>
             </div>
           ))}
-          <div className="flex justify-between border-t border-brand-100 pt-3 font-extrabold">
+          <div className="flex justify-between border-t border-ink-200 pt-3 font-extrabold">
             <span>Total payé</span>
-            <span className="text-brand-700">
+            <span className="text-ink-950">
               {formatUSD(order.totalUSD)} / {formatEUR(order.totalEUR)}
             </span>
           </div>
@@ -48,13 +48,13 @@ export default async function ConfirmationPage({
       </div>
       <Link
         href="/collection"
-        className="mt-8 inline-block rounded-full bg-brand-600 px-8 py-3 font-bold text-white hover:bg-brand-700"
+        className="mt-8 inline-block rounded-full bg-ink-950 px-8 py-3 font-bold text-white hover:bg-ink-800"
       >
         Continuer mes achats
       </Link>
       <p className="mt-4 text-sm text-neutral-500">
         Un souci avec votre commande ? Consultez notre{" "}
-        <Link href="/retours" className="font-semibold text-brand-700 hover:underline">
+        <Link href="/retours" className="font-semibold text-ink-950 hover:underline">
           politique de retours
         </Link>
         .

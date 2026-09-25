@@ -17,7 +17,7 @@ export default function ProductGallery({
 
   return (
     <div>
-      <div className="aspect-square overflow-hidden rounded-2xl bg-brand-50">
+      <div className="aspect-square overflow-hidden rounded-2xl bg-ink-50">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           key={current.id}
@@ -34,9 +34,9 @@ export default function ProductGallery({
               type="button"
               onClick={() => setSelected(i)}
               aria-label={`Voir la photo ${i + 1}`}
-              className={`aspect-square overflow-hidden rounded-xl bg-brand-50 transition ${
+              className={`aspect-square overflow-hidden rounded-xl bg-ink-50 transition ${
                 i === selected
-                  ? "ring-2 ring-brand-600 ring-offset-2"
+                  ? "ring-2 ring-ink-950 ring-offset-2"
                   : "opacity-70 hover:opacity-100"
               }`}
             >

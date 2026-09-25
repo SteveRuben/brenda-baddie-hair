@@ -24,7 +24,7 @@ export default function CollectionFilters({
   }
 
   const inputCls =
-    "rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm focus:border-brand-500 focus:outline-none";
+    "rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm focus:border-ink-950 focus:outline-none";
 
   return (
     <div className="mt-6 flex flex-wrap gap-3">

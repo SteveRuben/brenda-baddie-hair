@@ -6,7 +6,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 const inputCls =
-  "mt-1 w-full rounded-lg border border-neutral-200 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none";
+  "mt-1 w-full rounded-lg border border-neutral-200 px-3 py-2.5 text-sm focus:border-ink-950 focus:outline-none";
 
 export default function InscriptionPage() {
   const router = useRouter();
@@ -51,7 +51,7 @@ export default function InscriptionPage() {
         onSubmit={submit}
         className="w-full max-w-md rounded-2xl border border-neutral-100 bg-white p-8 shadow-lg"
       >
-        <h1 className="text-2xl font-extrabold text-brand-700">Créer un compte</h1>
+        <h1 className="text-2xl font-extrabold text-ink-950">Créer un compte</h1>
         <p className="mt-1 text-sm text-neutral-500">
           Suivez vos commandes et téléchargez vos factures.
         </p>
@@ -92,13 +92,13 @@ export default function InscriptionPage() {
         <button
           type="submit"
           disabled={loading}
-          className="mt-6 w-full rounded-full bg-brand-600 py-3 font-bold text-white hover:bg-brand-700 disabled:bg-neutral-300"
+          className="mt-6 w-full rounded-full bg-ink-950 py-3 font-bold text-white hover:bg-ink-800 disabled:bg-neutral-300"
         >
           {loading ? "Création…" : "Créer mon compte"}
         </button>
         <p className="mt-4 text-center text-sm text-neutral-500">
           Déjà cliente ?{" "}
-          <Link href="/compte/connexion" className="font-semibold text-brand-600 hover:underline">
+          <Link href="/compte/connexion" className="font-semibold text-ink-900 hover:underline">
             Se connecter
           </Link>
         </p>

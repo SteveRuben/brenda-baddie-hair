@@ -31,7 +31,7 @@ export default async function ContactPage() {
             href={`https://wa.me/${whatsapp}?text=${waText}`}
             target="_blank"
             rel="noreferrer"
-            className="rounded-2xl border border-neutral-200 bg-white p-6 transition hover:border-brand-400 hover:shadow-md"
+            className="rounded-2xl border border-neutral-200 bg-white p-6 transition hover:border-ink-500 hover:shadow-md"
           >
             <div className="flex items-center gap-3">
               <span className="text-green-600">
@@ -43,7 +43,7 @@ export default async function ContactPage() {
               Le moyen le plus rapide : écrivez-nous directement, nous répondons
               en général en quelques heures.
             </p>
-            <p className="mt-3 text-sm font-semibold text-brand-700">
+            <p className="mt-3 text-sm font-semibold text-ink-950">
               Discuter sur WhatsApp
             </p>
           </a>
@@ -51,19 +51,19 @@ export default async function ContactPage() {
         {email && (
           <a
             href={`mailto:${email}`}
-            className="rounded-2xl border border-neutral-200 bg-white p-6 transition hover:border-brand-400 hover:shadow-md"
+            className="rounded-2xl border border-neutral-200 bg-white p-6 transition hover:border-ink-500 hover:shadow-md"
           >
             <p className="text-lg font-bold">Email</p>
             <p className="mt-2 text-sm text-neutral-600">
               Pour toute demande détaillée, écrivez-nous à :
             </p>
-            <p className="mt-3 text-sm font-semibold text-brand-700 break-all">
+            <p className="mt-3 text-sm font-semibold text-ink-950 break-all">
               {email}
             </p>
           </a>
         )}
       </div>
-      <div className="mt-8 rounded-2xl bg-brand-50 p-6">
+      <div className="mt-8 rounded-2xl bg-ink-50 p-6">
         <p className="font-bold text-neutral-900">Horaires du service client</p>
         <p className="mt-1 text-sm text-neutral-600">
           Lundi à samedi, de 9h à 18h. Les messages reçus en dehors de ces

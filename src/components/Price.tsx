@@ -23,7 +23,7 @@ export default function Price({
   const compareValue = currency === "EUR" ? compareEUR : compareUSD;
   return (
     <div>
-      <p className={`font-extrabold text-brand-700 ${main}`}>
+      <p className={`font-extrabold text-ink-950 ${main}`}>
         {format(usd, eur)}
       </p>
       {compareValue ? (

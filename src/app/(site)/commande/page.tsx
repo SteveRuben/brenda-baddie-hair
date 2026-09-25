@@ -141,7 +141,7 @@ export default function CheckoutPage() {
   }, [items.length, orderId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const inputCls =
-    "w-full rounded-lg border border-neutral-200 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none";
+    "w-full rounded-lg border border-neutral-200 px-3 py-2.5 text-sm focus:border-ink-950 focus:outline-none";
 
   if (items.length === 0 && !orderId) {
     return null;
@@ -173,7 +173,7 @@ export default function CheckoutPage() {
           </div>
           <div>
             <h2 className="font-bold">Récapitulatif</h2>
-            <div className="mt-3 space-y-2 rounded-2xl bg-brand-50 p-5">
+            <div className="mt-3 space-y-2 rounded-2xl bg-ink-50 p-5">
               {items.map((i) => (
                 <div key={`${i.productId}-${i.variantId ?? ""}`} className="flex justify-between text-sm">
                   <span>
@@ -182,7 +182,7 @@ export default function CheckoutPage() {
                   <span className="font-semibold">{format(i.priceUSD * i.quantity, i.priceEUR * i.quantity)}</span>
                 </div>
               ))}
-              <div className="flex justify-between border-t border-brand-100 pt-3 text-sm">
+              <div className="flex justify-between border-t border-ink-200 pt-3 text-sm">
                 <span>Sous-total</span>
                 <span className="font-semibold">{format(subtotalUSD, subtotalEUR)}</span>
               </div>
@@ -190,9 +190,9 @@ export default function CheckoutPage() {
                 <span>Livraison</span>
                 <span className="font-semibold">{format(shipping.usd, shipping.eur)}</span>
               </div>
-              <div className="flex justify-between border-t border-brand-100 pt-3 font-extrabold">
+              <div className="flex justify-between border-t border-ink-200 pt-3 font-extrabold">
                 <span>Total</span>
-                <span className="text-brand-700">
+                <span className="text-ink-950">
                   {format(totalUSD, totalEUR)}
                 </span>
               </div>
@@ -200,7 +200,7 @@ export default function CheckoutPage() {
             <button
               onClick={createOrder}
               disabled={loading}
-              className="mt-4 w-full rounded-full bg-brand-600 py-3 font-bold text-white hover:bg-brand-700 disabled:bg-neutral-300"
+              className="mt-4 w-full rounded-full bg-ink-950 py-3 font-bold text-white hover:bg-ink-800 disabled:bg-neutral-300"
             >
               {loading ? "Création…" : "Continuer vers le paiement"}
             </button>

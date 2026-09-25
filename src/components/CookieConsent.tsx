@@ -42,7 +42,7 @@ export default function CookieConsent() {
         <p className="text-sm text-neutral-600">
           Nous utilisons des cookies pour faire fonctionner la boutique et, avec
           votre accord, mesurer l'audience.{" "}
-          <Link href="/confidentialite" className="font-semibold text-brand-700 hover:underline">
+          <Link href="/confidentialite" className="font-semibold text-ink-950 hover:underline">
             En savoir plus
           </Link>
         </p>
@@ -57,7 +57,7 @@ export default function CookieConsent() {
           <button
             type="button"
             onClick={() => choose("accepted")}
-            className="rounded-full bg-brand-600 px-5 py-2 text-sm font-bold text-white hover:bg-brand-700"
+            className="rounded-full bg-ink-950 px-5 py-2 text-sm font-bold text-white hover:bg-ink-800"
           >
             Accepter
           </button>

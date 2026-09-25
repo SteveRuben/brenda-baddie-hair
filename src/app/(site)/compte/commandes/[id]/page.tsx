@@ -29,7 +29,7 @@ export default async function CustomerOrderDetailPage({
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
-      <Link href="/compte" className="text-sm font-semibold text-brand-600 hover:underline">
+      <Link href="/compte" className="text-sm font-semibold text-ink-900 hover:underline">
         Retour à mon compte
       </Link>
       <h1 className="mt-2 text-3xl font-extrabold">Commande {order.number}</h1>
@@ -40,7 +40,7 @@ export default async function CustomerOrderDetailPage({
       <div className="mt-6 grid gap-3 sm:grid-cols-3">
         <div className="rounded-2xl bg-white p-5 shadow-sm">
           <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">Statut</p>
-          <p className="mt-1 font-bold text-brand-700">{STATUS_LABELS[order.status] ?? order.status}</p>
+          <p className="mt-1 font-bold text-ink-950">{STATUS_LABELS[order.status] ?? order.status}</p>
         </div>
         <div className="rounded-2xl bg-white p-5 shadow-sm">
           <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">Paiement</p>
@@ -83,7 +83,7 @@ export default async function CustomerOrderDetailPage({
           </div>
           <div className="flex justify-between border-t border-neutral-100 pt-3 text-base font-extrabold">
             <span>Total</span>
-            <span className="text-brand-700">
+            <span className="text-ink-950">
               {formatUSD(order.totalUSD)} / {formatEUR(order.totalEUR)}
             </span>
           </div>
@@ -92,7 +92,7 @@ export default async function CustomerOrderDetailPage({
 
       <a
         href={`/api/compte/factures/${order.id}`}
-        className="mt-6 inline-block rounded-full bg-brand-600 px-6 py-3 font-bold text-white hover:bg-brand-700"
+        className="mt-6 inline-block rounded-full bg-ink-950 px-6 py-3 font-bold text-white hover:bg-ink-800"
       >
         Télécharger la facture (PDF)
       </a>

@@ -93,10 +93,10 @@ export default function CartDrawer() {
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="flex items-center justify-between border-b border-brand-100 px-5 py-4">
+        <div className="flex items-center justify-between border-b border-ink-200 px-5 py-4">
           <h2 className="text-lg font-extrabold">
             Votre panier{" "}
-            <span className="ml-1 rounded-full bg-brand-600 px-2.5 py-0.5 text-sm font-bold text-white">
+            <span className="ml-1 rounded-full bg-ink-950 px-2.5 py-0.5 text-sm font-bold text-white">
               {count}
             </span>
           </h2>
@@ -112,7 +112,7 @@ export default function CartDrawer() {
 
         {items.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center gap-3 px-8 text-center">
-            <span className="rounded-full bg-brand-50 p-5 text-brand-600">
+            <span className="rounded-full bg-ink-50 p-5 text-ink-900">
               <BagIcon className="h-10 w-10" />
             </span>
             <p className="text-lg font-bold">Votre panier est vide</p>
@@ -122,7 +122,7 @@ export default function CartDrawer() {
             <Link
               href="/collection"
               onClick={closeCart}
-              className="mt-2 rounded-full bg-brand-600 px-8 py-3 font-bold text-white hover:bg-brand-700"
+              className="mt-2 rounded-full bg-ink-950 px-8 py-3 font-bold text-white hover:bg-ink-800"
             >
               Voir la collection
             </Link>
@@ -144,14 +144,14 @@ export default function CartDrawer() {
                     <img
                       src={item.image ?? "/images/placeholder.svg"}
                       alt={item.name}
-                      className="h-20 w-20 rounded-xl bg-brand-50 object-cover"
+                      className="h-20 w-20 rounded-xl bg-ink-50 object-cover"
                     />
                   </Link>
                   <div className="min-w-0 flex-1">
                     <Link
                       href={`/produit/${item.slug}`}
                       onClick={closeCart}
-                      className="block truncate text-sm font-bold hover:text-brand-700"
+                      className="block truncate text-sm font-bold hover:text-ink-950"
                     >
                       {item.name}
                     </Link>
@@ -193,36 +193,36 @@ export default function CartDrawer() {
                       <button
                         type="button"
                         onClick={() => removeItem(item.productId, item.variantId)}
-                        className="ml-1 text-xs text-red-600 hover:underline"
+                        className="ml-1 text-xs text-ink-500 hover:text-ink-950 hover:underline"
                       >
                         Retirer
                       </button>
                     </div>
                   </div>
-                  <p className="shrink-0 text-sm font-extrabold text-brand-700">
+                  <p className="shrink-0 text-sm font-extrabold text-ink-950">
                     {format(item.priceUSD * item.quantity, item.priceEUR * item.quantity)}
                   </p>
                 </div>
               ))}
             </div>
-            <div className="border-t border-brand-100 px-5 py-4">
+            <div className="border-t border-ink-200 px-5 py-4">
               <div className="flex justify-between text-sm">
                 <span className="text-neutral-500">Sous-total</span>
-                <span className="font-extrabold text-brand-700">
+                <span className="font-extrabold text-ink-950">
                   {format(subtotalUSD, subtotalEUR)}
                 </span>
               </div>
               <Link
                 href="/panier"
                 onClick={closeCart}
-                className="mt-3 block rounded-full border-2 border-brand-600 py-2.5 text-center font-bold text-brand-700 hover:bg-brand-50"
+                className="mt-3 block rounded-full border-2 border-ink-950 py-2.5 text-center font-bold text-ink-950 hover:bg-ink-100"
               >
                 Voir le panier
               </Link>
               <Link
                 href="/commande"
                 onClick={closeCart}
-                className="mt-2 block rounded-full bg-brand-600 py-3 text-center font-bold text-white hover:bg-brand-700"
+                className="mt-2 block rounded-full bg-ink-950 py-3 text-center font-bold text-white hover:bg-ink-800"
               >
                 Passer commande
               </Link>

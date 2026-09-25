@@ -81,7 +81,7 @@ export default function ProductPurchase({ product }: { product: ProductInfo }) {
   }
 
   const btnCls =
-    "w-full rounded-full bg-brand-600 px-6 py-3 font-bold text-white transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:bg-neutral-300";
+    "w-full rounded-full bg-ink-950 px-6 py-3 font-bold text-white transition hover:bg-ink-800 disabled:cursor-not-allowed disabled:bg-neutral-300";
 
   return (
     <div>
@@ -106,8 +106,8 @@ export default function ProductPurchase({ product }: { product: ProductInfo }) {
                     onClick={() => selectType(t)}
                     className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
                       selectedType === t
-                        ? "border-brand-600 bg-brand-600 text-white"
-                        : "border-neutral-200 hover:border-brand-400"
+                        ? "border-ink-950 bg-ink-950 text-white"
+                        : "border-neutral-200 hover:border-ink-500"
                     }`}
                   >
                     {t}
@@ -127,8 +127,8 @@ export default function ProductPurchase({ product }: { product: ProductInfo }) {
                   disabled={v.stock <= 0}
                   className={`rounded-full border px-4 py-2 text-sm font-semibold transition disabled:opacity-40 ${
                     variantId === v.id
-                      ? "border-brand-600 bg-brand-600 text-white"
-                      : "border-neutral-200 hover:border-brand-400"
+                      ? "border-ink-950 bg-ink-950 text-white"
+                      : "border-neutral-200 hover:border-ink-500"
                   }`}
                 >
                   {v.name}
@@ -148,7 +148,7 @@ export default function ProductPurchase({ product }: { product: ProductInfo }) {
               type="button"
               aria-label="Diminuer"
               onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-              className="px-4 py-2 text-lg font-bold text-brand-700"
+              className="px-4 py-2 text-lg font-bold text-ink-950"
             >
               −
             </button>
@@ -157,7 +157,7 @@ export default function ProductPurchase({ product }: { product: ProductInfo }) {
               type="button"
               aria-label="Augmenter"
               onClick={() => setQuantity((q) => Math.min(stock || 99, q + 1))}
-              className="px-4 py-2 text-lg font-bold text-brand-700"
+              className="px-4 py-2 text-lg font-bold text-ink-950"
             >
               +
             </button>

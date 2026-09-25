@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 const inputCls =
-  "mt-1 w-full rounded-lg border border-neutral-200 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none";
+  "mt-1 w-full rounded-lg border border-neutral-200 px-3 py-2.5 text-sm focus:border-ink-950 focus:outline-none";
 
 interface Profile {
   firstName: string;
@@ -57,7 +57,7 @@ export default function CustomerProfileForm({ initial }: { initial: Profile }) {
     <form onSubmit={submit} className="rounded-2xl bg-white p-6 shadow-sm">
       <h2 className="font-bold">Mes informations</h2>
       {message && (
-        <p className="mt-3 rounded-lg bg-brand-50 p-3 text-sm font-semibold text-brand-700">
+        <p className="mt-3 rounded-lg bg-ink-50 p-3 text-sm font-semibold text-ink-950">
           {message}
         </p>
       )}
@@ -98,7 +98,7 @@ export default function CustomerProfileForm({ initial }: { initial: Profile }) {
       <button
         type="submit"
         disabled={loading}
-        className="mt-4 rounded-full bg-brand-600 px-6 py-2.5 text-sm font-bold text-white hover:bg-brand-700 disabled:bg-neutral-300"
+        className="mt-4 rounded-full bg-ink-950 px-6 py-2.5 text-sm font-bold text-white hover:bg-ink-800 disabled:bg-neutral-300"
       >
         {loading ? "Enregistrement…" : "Enregistrer"}
       </button>

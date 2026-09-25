@@ -68,18 +68,18 @@ export default async function Home() {
             <div className="absolute inset-0 bg-black/55" />
           </>
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-brand-700 via-brand-600 to-brand-800" />
+          <div className="absolute inset-0 bg-gradient-to-br from-ink-800 via-ink-950 to-black" />
         )}
         <div className="relative mx-auto max-w-6xl px-4 py-20 text-center">
-          <h1 className="text-4xl font-extrabold tracking-tight md:text-6xl">
+          <h1 className="font-display text-4xl tracking-tight md:text-6xl">
             {settings.heroTitle}
           </h1>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-brand-100">
+          <p className="mx-auto mt-4 max-w-xl text-lg text-ink-300">
             {settings.heroSubtitle}
           </p>
           <Link
             href="/collection"
-            className="mt-8 inline-block rounded-full bg-white px-8 py-3 font-bold text-brand-700 shadow-lg transition hover:scale-105"
+            className="mt-8 inline-block rounded-full bg-white px-8 py-3 font-bold text-ink-950 shadow-lg transition hover:scale-105"
           >
             Découvrir la collection
           </Link>
@@ -89,7 +89,7 @@ export default async function Home() {
       {/* Bloc d'information (configurable dans Paramètres, masqué si vide) */}
       {settings.announcementText.trim() && (
         <section className="mx-auto max-w-3xl px-4 py-14 text-center">
-          <h2 className="text-3xl font-extrabold">{settings.announcementTitle}</h2>
+          <h2 className="font-display text-4xl">{settings.announcementTitle}</h2>
           <p className="mt-6 whitespace-pre-line leading-relaxed text-neutral-600">
             {renderRich(settings.announcementText)}
           </p>
@@ -99,8 +99,8 @@ export default async function Home() {
       {/* Produits vedettes */}
       <section className="mx-auto max-w-6xl px-4 py-14">
         <div className="mb-8 flex items-end justify-between">
-          <h2 className="text-2xl font-extrabold">Nos coups de cœur</h2>
-          <Link href="/collection" className="text-sm font-semibold text-brand-600 hover:underline">
+          <h2 className="font-display text-3xl">Nos coups de cœur</h2>
+          <Link href="/collection" className="text-sm font-semibold text-ink-900 hover:underline">
             Tout voir →
           </Link>
         </div>
@@ -120,7 +120,7 @@ export default async function Home() {
       {/* Nos catégories (façon "Notre sélection" de Nandi's Wigs) */}
       {visibleCategories.length > 0 && (
         <section className="mx-auto max-w-6xl px-4 py-14">
-          <h2 className="text-center text-2xl font-extrabold uppercase tracking-wide">
+          <h2 className="text-center font-display text-3xl">
             Notre sélection
           </h2>
           <div className="mt-8 grid gap-5 sm:grid-cols-2 md:grid-cols-4">
@@ -128,12 +128,12 @@ export default async function Home() {
               <Link
                 key={c.id}
                 href={`/collection?categorie=${encodeURIComponent(c.slug)}`}
-                className="group flex flex-col items-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 px-6 py-10 text-center text-white transition hover:shadow-lg"
+                className="group flex flex-col items-center rounded-2xl bg-ink-950 px-6 py-10 text-center text-white transition hover:shadow-lg"
               >
                 <span className="text-lg font-extrabold uppercase tracking-wide">
                   {c.name}
                 </span>
-                <span className="mt-1 text-sm text-brand-100">
+                <span className="mt-1 text-sm text-ink-300">
                   {c._count.products} modèle{c._count.products > 1 ? "s" : ""}
                 </span>
                 <span className="mt-4 text-sm font-bold underline-offset-4 group-hover:underline">
@@ -147,20 +147,20 @@ export default async function Home() {
 
       {/* À propos */}
       <section className="mx-auto max-w-6xl px-4 py-14">
-        <h2 className="text-2xl font-extrabold">{settings.aboutTitle}</h2>
+        <h2 className="font-display text-3xl">{settings.aboutTitle}</h2>
         <p className="mt-3 max-w-3xl leading-relaxed text-neutral-600">{settings.aboutText}</p>
       </section>
 
       {/* Arguments */}
-      <section className="bg-brand-50">
+      <section className="bg-ink-50">
         <div className="mx-auto grid max-w-6xl gap-6 px-4 py-14 md:grid-cols-3">
           {[
             { t: "Qualité premium", d: "Des fibres et finitions sélectionnées avec exigence." },
             { t: "Paiement sécurisé", d: "Payez en toute confiance via PayPal, en USD ou EUR." },
             { t: "Expédition suivie", d: "Chaque commande est préparée avec soin et suivie." },
           ].map((a) => (
-            <div key={a.t} className="rounded-2xl bg-white p-6 shadow-sm">
-              <h3 className="font-extrabold text-brand-700">{a.t}</h3>
+            <div key={a.t} className="rounded-2xl border border-ink-100 bg-white p-6 shadow-sm">
+              <h3 className="font-extrabold text-ink-950">{a.t}</h3>
               <p className="mt-2 text-sm text-neutral-600">{a.d}</p>
             </div>
           ))}

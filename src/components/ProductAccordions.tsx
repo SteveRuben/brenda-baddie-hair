@@ -51,7 +51,7 @@ export default function ProductAccordions({ description, brand, color, size, sto
         <p className="leading-relaxed">
           Chaque commande est préparée avec soin et expédiée avec suivi. Les
           délais et frais de livraison sont indiqués au moment de la commande.{" "}
-          <Link href="/livraison" className="font-semibold text-brand-700 underline">
+          <Link href="/livraison" className="font-semibold text-ink-950 underline">
             En savoir plus
           </Link>
         </p>
@@ -63,7 +63,7 @@ export default function ProductAccordions({ description, brand, color, size, sto
         <p className="leading-relaxed">
           Un article ne vous convient pas ? Vous disposez d'un délai de
           rétractation pour nous le retourner.{" "}
-          <Link href="/retours" className="font-semibold text-brand-700 underline">
+          <Link href="/retours" className="font-semibold text-ink-950 underline">
             Voir les conditions
           </Link>
         </p>
