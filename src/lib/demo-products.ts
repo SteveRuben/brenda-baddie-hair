@@ -44,6 +44,11 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
     stock: 15,
     status: "active",
     featured: true,
+    images: [
+      "/images/demo/baddie-lisse-1.jpg",
+      "/images/demo/baddie-lisse-2.jpg",
+      "/images/demo/baddie-lisse-3.jpg",
+    ],
     variants: [
       { name: '18 pouces', type: "Glueless", priceUSD: 79, priceEUR: 71, stock: 8 },
       { name: '22 pouces', type: "Glueless", priceUSD: 89, priceEUR: 79, stock: 15 },
@@ -66,6 +71,11 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
     stock: 10,
     status: "active",
     featured: true,
+    images: [
+      "/images/demo/curly-queen-1.jpg",
+      "/images/demo/curly-queen-2.jpg",
+      "/images/demo/curly-queen-3.jpg",
+    ],
     variants: [
       { name: '16 pouces', type: "Glueless", priceUSD: 85, priceEUR: 77, stock: 6 },
       { name: '20 pouces', type: "Glueless", priceUSD: 95, priceEUR: 85, stock: 10 },
@@ -115,6 +125,11 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
     stock: 20,
     status: "active",
     featured: false,
+    images: [
+      "/images/demo/bob-chic-1.jpg",
+      "/images/demo/bob-chic-2.jpg",
+      "/images/demo/bob-chic-3.jpg",
+    ],
     variants: [
       { name: '10 pouces', type: "Glueless", priceUSD: 59, priceEUR: 53, stock: 10 },
       { name: '12 pouces', type: "Glueless", priceUSD: 65, priceEUR: 59, stock: 20 },

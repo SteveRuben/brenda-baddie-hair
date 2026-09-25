@@ -22,7 +22,13 @@ export async function generateMetadata({
     const description =
       product.description?.slice(0, 160) ||
       `${product.name} — perruque premium bree baddie hair.`;
-    const images = product.images[0]?.url ? [{ url: product.images[0].url }] : [];
+    const fallbackImage = {
+      url: "/images/og-image.png?v=2",
+      width: 1200,
+      height: 630,
+      alt: product.name,
+    };
+    const images = product.images[0]?.url ? [{ url: product.images[0].url }] : [fallbackImage];
     return {
       title: product.name,
       description,

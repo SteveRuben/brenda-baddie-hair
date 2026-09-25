@@ -27,9 +27,9 @@ export async function generateMetadata(): Promise<Metadata> {
       description,
       images: [
         {
-          url: "/images/logo-embleme.webp",
-          width: 1600,
-          height: 1600,
+          url: "/images/og-image.png?v=2",
+          width: 1200,
+          height: 630,
           alt: siteName,
         },
       ],
@@ -38,7 +38,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title,
       description,
-      images: ["/images/logo-embleme.webp"],
+      images: ["/images/og-image.png?v=2"],
     },
     robots: {
       index: true,
