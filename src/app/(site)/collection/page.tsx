@@ -34,7 +34,7 @@ export default async function Collection({
   if (params.categorie) where.category = { slug: params.categorie };
   if (params.color) where.color = params.color;
   if (params.brand) where.brand = params.brand;
-  if (params.size) where.size = params.size;
+  if (params.size) where.variants = { some: { name: params.size } };
   if (params.minUSD || params.maxUSD) {
     where.priceUSD = {
       ...(params.minUSD ? { gte: Number(params.minUSD) } : {}),
@@ -48,7 +48,10 @@ export default async function Collection({
     };
   }
 
-  const [colors, brands, sizes] = await Promise.all([
+  // Les tailles viennent des variantes (chaque produit peut exister en
+  // plusieurs tailles) : on liste les tailles distinctes des variantes des
+  // produits actifs, triées par longueur croissante.
+  const [colors, brands, variantSizes] = await Promise.all([
     prisma.product.findMany({
       where: { status: "active" },
       select: { color: true },
@@ -59,12 +62,16 @@ export default async function Collection({
       select: { brand: true },
       distinct: ["brand"],
     }),
-    prisma.product.findMany({
-      where: { status: "active" },
-      select: { size: true },
-      distinct: ["size"],
+    prisma.variant.findMany({
+      where: { product: { status: "active" } },
+      select: { name: true },
+      distinct: ["name"],
     }),
   ]);
+  const sizes = variantSizes
+    .map((s) => s.name)
+    .filter(Boolean)
+    .sort((a, b) => (parseInt(a, 10) || 0) - (parseInt(b, 10) || 0));
 
   const include = {
     images: { orderBy: { position: "asc" as const }, take: 2 },
@@ -109,7 +116,7 @@ export default async function Collection({
       <CollectionFilters
         colors={colors.map((c) => c.color).filter(Boolean) as string[]}
         brands={brands.map((b) => b.brand).filter(Boolean) as string[]}
-        sizes={sizes.map((s) => s.size).filter(Boolean) as string[]}
+        sizes={sizes}
         current={params}
       />
 

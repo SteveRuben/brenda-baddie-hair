@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { formatUSD, formatEUR } from "@/lib/format";
 import SeedDemoImagesButton from "./SeedDemoImagesButton";
 import SeedDemoVariantsButton from "./SeedDemoVariantsButton";
+import WipeDatabaseButton from "./WipeDatabaseButton";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +20,7 @@ export default async function AdminProducts() {
         <div className="flex items-center gap-3">
           <SeedDemoVariantsButton />
           <SeedDemoImagesButton />
+          <WipeDatabaseButton />
           <Link
             href="/admin/produits/nouveau"
             className="rounded-full bg-brand-600 px-5 py-2.5 font-bold text-white hover:bg-brand-700"

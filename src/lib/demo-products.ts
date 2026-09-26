@@ -30,6 +30,42 @@ export interface DemoProduct {
   variants?: DemoVariant[];
 }
 
+/** Toutes les tailles proposées : 10 à 30 pouces par pas de 2. */
+const ALL_LENGTHS = [10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30];
+const ALL_TYPES = ["Glueless", "Frontal"] as const;
+
+/**
+ * Construit les variantes "toutes tailles" d'un produit démo :
+ * chaque longueur × Glueless/Frontal. Le prix augmente avec la longueur
+ * (stepUSD/stepEUR par tranche de 2 pouces), le Frontal coûte un
+ * supplément fixe par rapport au Glueless de même longueur.
+ */
+function allSizesVariants(
+  baseUSD: number,
+  baseEUR: number,
+  stepUSD = 5,
+  stepEUR = 5,
+  frontalExtraUSD = 30,
+  frontalExtraEUR = 28,
+): DemoVariant[] {
+  const out: DemoVariant[] = [];
+  ALL_TYPES.forEach((type, typeIdx) => {
+    ALL_LENGTHS.forEach((len, i) => {
+      const extra = type === "Frontal" ? { usd: frontalExtraUSD, eur: frontalExtraEUR } : { usd: 0, eur: 0 };
+      out.push({
+        name: `${len} pouces`,
+        type,
+        priceUSD: baseUSD + i * stepUSD + extra.usd,
+        priceEUR: baseEUR + i * stepEUR + extra.eur,
+        stock: 4 + ((len + typeIdx * 7) % 5) * 2,
+      });
+    });
+  });
+  return out;
+}
+
+const SIZE_RANGE = '10" - 30"';
+
 export const DEMO_PRODUCTS: DemoProduct[] = [
   {
     name: "Baddie Lisse Premium 22\"",
@@ -38,10 +74,10 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
       "Perruque lisse premium en fibres haute qualité, effet naturel et brillance soyeuse. Bonnet ajustable confortable.",
     brand: "bree baddie hair",
     color: "Noir naturel",
-    size: '22"',
+    size: SIZE_RANGE,
     priceUSD: 89,
     priceEUR: 79,
-    stock: 15,
+    stock: 150,
     status: "active",
     featured: true,
     images: [
@@ -49,14 +85,7 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
       "/images/demo/baddie-lisse-2.jpg",
       "/images/demo/baddie-lisse-3.jpg",
     ],
-    variants: [
-      { name: '18 pouces', type: "Glueless", priceUSD: 79, priceEUR: 71, stock: 8 },
-      { name: '22 pouces', type: "Glueless", priceUSD: 89, priceEUR: 79, stock: 15 },
-      { name: '24 pouces', type: "Glueless", priceUSD: 99, priceEUR: 89, stock: 6 },
-      { name: '18 pouces', type: "Frontal", priceUSD: 109, priceEUR: 99, stock: 5 },
-      { name: '22 pouces', type: "Frontal", priceUSD: 119, priceEUR: 109, stock: 7 },
-      { name: '24 pouces', type: "Frontal", priceUSD: 129, priceEUR: 119, stock: 4 },
-    ],
+    variants: allSizesVariants(69, 62),
   },
   {
     name: "Curly Queen 20\"",
@@ -65,10 +94,10 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
       "Boucles définies et volumineuses pour un look irrésistible. Facile d'entretien, tient toute la journée.",
     brand: "bree baddie hair",
     color: "Noir",
-    size: '20"',
+    size: SIZE_RANGE,
     priceUSD: 95,
     priceEUR: 85,
-    stock: 10,
+    stock: 150,
     status: "active",
     featured: true,
     images: [
@@ -76,14 +105,7 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
       "/images/demo/curly-queen-2.jpg",
       "/images/demo/curly-queen-3.jpg",
     ],
-    variants: [
-      { name: '16 pouces', type: "Glueless", priceUSD: 85, priceEUR: 77, stock: 6 },
-      { name: '20 pouces', type: "Glueless", priceUSD: 95, priceEUR: 85, stock: 10 },
-      { name: '24 pouces', type: "Glueless", priceUSD: 105, priceEUR: 95, stock: 5 },
-      { name: '16 pouces', type: "Frontal", priceUSD: 115, priceEUR: 105, stock: 4 },
-      { name: '20 pouces', type: "Frontal", priceUSD: 125, priceEUR: 115, stock: 6 },
-      { name: '24 pouces', type: "Frontal", priceUSD: 135, priceEUR: 125, stock: 3 },
-    ],
+    variants: allSizesVariants(75, 68),
   },
   {
     name: "Body Wave Luxe 24\"",
@@ -92,25 +114,18 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
       "Ondulations naturelles effet wavy, mouvement fluide et volume maîtrisé. La préférée des baddies.",
     brand: "bree baddie hair",
     color: "Châtain",
-    size: '24"',
+    size: SIZE_RANGE,
     priceUSD: 110,
     priceEUR: 99,
-    stock: 8,
+    stock: 150,
     status: "active",
     featured: true,
-    variants: [
-      { name: '20 pouces', type: "Glueless", priceUSD: 100, priceEUR: 90, stock: 5 },
-      { name: '24 pouces', type: "Glueless", priceUSD: 110, priceEUR: 99, stock: 8 },
-      { name: '26 pouces', type: "Glueless", priceUSD: 120, priceEUR: 109, stock: 4 },
-      { name: '20 pouces', type: "Frontal", priceUSD: 130, priceEUR: 119, stock: 4 },
-      { name: '24 pouces', type: "Frontal", priceUSD: 140, priceEUR: 129, stock: 6 },
-      { name: '26 pouces', type: "Frontal", priceUSD: 150, priceEUR: 139, stock: 3 },
-    ],
     images: [
       "/images/demo/body-wave-1.jpg",
       "/images/demo/body-wave-2.jpg",
       "/images/demo/body-wave-3.jpg",
     ],
+    variants: allSizesVariants(85, 77),
   },
   {
     name: "Bob Chic 12\"",
@@ -119,10 +134,10 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
       "Carré chic et moderne, coupe nette et élégante. Parfait pour un look sophistiqué au quotidien.",
     brand: "bree baddie hair",
     color: "Noir naturel",
-    size: '12"',
+    size: SIZE_RANGE,
     priceUSD: 65,
     priceEUR: 59,
-    stock: 20,
+    stock: 150,
     status: "active",
     featured: false,
     images: [
@@ -130,13 +145,6 @@ export const DEMO_PRODUCTS: DemoProduct[] = [
       "/images/demo/bob-chic-2.jpg",
       "/images/demo/bob-chic-3.jpg",
     ],
-    variants: [
-      { name: '10 pouces', type: "Glueless", priceUSD: 59, priceEUR: 53, stock: 10 },
-      { name: '12 pouces', type: "Glueless", priceUSD: 65, priceEUR: 59, stock: 20 },
-      { name: '14 pouces', type: "Glueless", priceUSD: 69, priceEUR: 63, stock: 8 },
-      { name: '10 pouces', type: "Frontal", priceUSD: 79, priceEUR: 71, stock: 6 },
-      { name: '12 pouces', type: "Frontal", priceUSD: 85, priceEUR: 77, stock: 9 },
-      { name: '14 pouces', type: "Frontal", priceUSD: 89, priceEUR: 81, stock: 5 },
-    ],
+    variants: allSizesVariants(59, 53),
   },
 ];
