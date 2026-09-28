@@ -7,11 +7,15 @@ export default auth((req) => {
   const isLoginPage = pathname === "/admin/login";
   const isSetupPage = pathname === "/admin/setup";
   const role = (req.auth?.user as { role?: string } | undefined)?.role;
+  // Le backoffice est réservé aux comptes staff (admin/employé). Un client
+  // connecté (role "customer") ne doit jamais pouvoir consulter l'admin :
+  // c'est le mélange espace client / backoffice qu'on referme ici.
+  const isStaff = role === "admin" || role === "employe";
 
-  if (pathname.startsWith("/admin") && !isLoginPage && !isSetupPage && !isLoggedIn) {
+  if (pathname.startsWith("/admin") && !isLoginPage && !isSetupPage && (!isLoggedIn || !isStaff)) {
     return NextResponse.redirect(new URL("/admin/login", req.nextUrl));
   }
-  if ((isLoginPage || isSetupPage) && isLoggedIn) {
+  if ((isLoginPage || isSetupPage) && isLoggedIn && isStaff) {
     return NextResponse.redirect(new URL("/admin", req.nextUrl));
   }
 

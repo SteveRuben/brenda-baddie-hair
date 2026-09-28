@@ -4,6 +4,10 @@ import { redirect } from "next/navigation";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
+  // Filet de sécurité en plus du proxy (src/proxy.ts) : un compte client
+  // (role "customer") authentifié ne doit jamais voir le backoffice.
+  const role = (session?.user as { role?: string } | undefined)?.role;
+  const isStaff = role === "admin" || role === "employe";
   return (
     <div className="min-h-screen bg-neutral-50">
       <header className="border-b border-brand-100 bg-white">
@@ -12,7 +16,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             BBH — Admin
           </Link>
           <nav className="flex items-center gap-4 text-sm font-medium">
-            {session && (
+            {isStaff && (
               <>
                 <Link href="/admin" className="hover:text-brand-600">Tableau de bord</Link>
                 <Link href="/admin/produits" className="hover:text-brand-600">Produits</Link>
@@ -35,7 +39,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         </div>
       </header>
       <main className="mx-auto max-w-6xl px-4 py-8">
-        {!session ? redirect("/admin/login") : children}
+        {!isStaff ? redirect("/admin/login") : children}
       </main>
     </div>
   );
