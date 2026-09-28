@@ -66,6 +66,7 @@ Compte admin de démo : `admin@brendabaddiehair.com` / `admin123`
 |---|---|
 | `DATABASE_URL` | SQLite local (`file:./dev.db`) ou Postgres en prod |
 | `AUTH_SECRET` | Secret NextAuth (32+ caractères) |
+| `AUTH_URL` | **URL publique réelle du site en prod** (`https://...`), jamais `localhost`. Sert à construire les redirections signIn/signOut côté serveur, en priorité sur l'en-tête de la requête — une valeur oubliée à `localhost` renvoie les utilisateurs vers leur propre machine après une déconnexion. |
 | `PAYPAL_CLIENT_ID` / `PAYPAL_CLIENT_SECRET` | Clés PayPal (sandbox puis live) |
 | `PAYPAL_MODE` | `sandbox` ou `live` |
 | `NEXT_PUBLIC_PAYPAL_CLIENT_ID` | Clé publique PayPal (bouton front) |
