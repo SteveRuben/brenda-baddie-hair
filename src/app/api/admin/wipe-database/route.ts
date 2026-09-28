@@ -40,7 +40,16 @@ export async function POST(req: Request) {
     for (const p of DEMO_PRODUCTS) {
       await applyDemoProduct(p);
     }
-    return NextResponse.json({ ok: true, wiped: true, products: DEMO_PRODUCTS.length });
+    const response = NextResponse.json({ ok: true, wiped: true, products: DEMO_PRODUCTS.length });
+    // Le compte derrière la session courante vient d'être supprimé, mais les
+    // sessions sont des JWT non revérifiés en base à chaque requête : sans ça,
+    // le cookie reste "valide" (rôle admin fantôme) et src/proxy.ts renvoie
+    // toute session staff loggée loin de /admin/setup, empêchant de recréer
+    // un compte. On invalide donc explicitement le cookie ici.
+    for (const name of ["authjs.session-token", "__Secure-authjs.session-token"]) {
+      response.cookies.delete({ name, path: "/", secure: name.startsWith("__Secure-") });
+    }
+    return response;
   } catch (e) {
     console.error(e);
     return NextResponse.json({ error: "Opération impossible pour le moment." }, { status: 500 });
