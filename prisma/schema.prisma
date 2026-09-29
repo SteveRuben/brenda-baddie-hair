@@ -103,6 +103,8 @@ model Order {
   status         String      @default("pending")
   paymentStatus  String      @default("pending")
   paypalOrderId  String?
+  paymentToken   String?   @unique
+  tokenExpiresAt DateTime?
   carrier        String?
   trackingNumber String?
   notes          String?

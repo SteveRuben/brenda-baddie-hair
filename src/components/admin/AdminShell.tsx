@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   ShoppingCart,
   Package,
+  Link2,
   Mail,
   Settings,
   Users,
@@ -38,6 +39,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: "/admin", label: "Tableau de bord", icon: LayoutDashboard, exact: true },
       { href: "/admin/commandes", label: "Commandes", icon: ShoppingCart },
       { href: "/admin/produits", label: "Produits", icon: Package },
+      { href: "/admin/liens-paiement", label: "Liens de paiement", icon: Link2 },
     ],
   },
   {

@@ -17,7 +17,10 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-    const { orderId } = (await req.json()) as { orderId: string };
+    const { orderId, cancelPath } = (await req.json()) as {
+      orderId: string;
+      cancelPath?: string;
+    };
     const order = await prisma.order.findUnique({
       where: { id: orderId },
       include: { items: true, customer: true },
@@ -58,6 +61,12 @@ export async function POST(req: Request) {
       });
     }
 
+    // En cas d'abandon, on revient avec l'orderId pour ne pas recréer
+    // une commande en double (ou sur la page du lien de paiement).
+    const safeCancelPath =
+      cancelPath && cancelPath.startsWith("/") && !cancelPath.startsWith("//")
+        ? cancelPath
+        : `/commande?orderId=${order.id}`;
     const session = await stripeClient().checkout.sessions.create({
       mode: "payment",
       payment_method_types: ["card"],
@@ -65,9 +74,7 @@ export async function POST(req: Request) {
       customer_email: order.customer.email,
       metadata: { orderId: order.id, orderNumber: order.number },
       success_url: `${baseUrl}/confirmation/${order.number}?session_id={CHECKOUT_SESSION_ID}`,
-      // En cas d'abandon, on revient avec l'orderId pour ne pas recréer
-      // une commande en double.
-      cancel_url: `${baseUrl}/commande?orderId=${order.id}`,
+      cancel_url: `${baseUrl}${safeCancelPath}`,
     });
     if (!session.url) {
       return NextResponse.json({ error: "Stripe n'a pas créé la session." }, { status: 500 });
