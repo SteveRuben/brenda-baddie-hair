@@ -84,6 +84,10 @@ export async function POST(req: Request) {
       let priceUSD = product.priceUSD;
       let priceEUR = product.priceEUR;
       let name = product.name;
+      // Le stock suivi est celui de la variante quand elle est choisie,
+      // sinon celui du produit (produits sans variantes).
+      let stock = product.stock;
+      let stockLabel = product.name;
       if (item.variantId) {
         const variant = product.variants.find((v) => v.id === item.variantId);
         if (variant) {
@@ -91,11 +95,13 @@ export async function POST(req: Request) {
           if (variant.priceEUR != null) priceEUR = variant.priceEUR;
           const vLabel = variant.type?.trim() ? `${variant.type.trim()}, ${variant.name}` : variant.name;
           name = `${product.name} — ${vLabel}`;
+          stock = variant.stock;
+          stockLabel = name;
         }
       }
-      if (product.stock < qty) {
+      if (stock < qty) {
         return NextResponse.json(
-          { error: `Stock insuffisant pour ${product.name}.` },
+          { error: `Stock insuffisant pour ${stockLabel}.` },
           { status: 400 }
         );
       }

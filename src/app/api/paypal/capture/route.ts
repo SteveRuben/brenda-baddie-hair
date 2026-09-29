@@ -75,12 +75,24 @@ export async function POST(req: Request) {
           data: { paymentStatus: "paid", status: "confirmed" },
         });
         for (const item of order.items) {
-          const r = await tx.product.updateMany({
-            where: { id: item.productId, stock: { gte: item.quantity } },
-            data: { stock: { decrement: item.quantity } },
-          });
-          if (r.count === 0) {
-            throw new Error(`Stock insuffisant pour ${item.name}`);
+          // Décrément atomique avec garde anti-survente, au niveau fin :
+          // la variante quand l'article en a une, sinon le produit.
+          if (item.variantId) {
+            const r = await tx.variant.updateMany({
+              where: { id: item.variantId, stock: { gte: item.quantity } },
+              data: { stock: { decrement: item.quantity } },
+            });
+            if (r.count === 0) {
+              throw new Error(`Stock insuffisant pour ${item.name}`);
+            }
+          } else {
+            const r = await tx.product.updateMany({
+              where: { id: item.productId, stock: { gte: item.quantity } },
+              data: { stock: { decrement: item.quantity } },
+            });
+            if (r.count === 0) {
+              throw new Error(`Stock insuffisant pour ${item.name}`);
+            }
           }
         }
       });

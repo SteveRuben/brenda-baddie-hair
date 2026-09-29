@@ -25,7 +25,7 @@ export default async function AdminDashboard() {
   startOfWeek.setDate(startOfDay.getDate() - ((startOfDay.getDay() + 6) % 7));
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-  const [orders, productCount, lowStock, paid, dayCount, weekCount, monthCount, paymentGroups, topSales] =
+  const [orders, productCount, lowStockProducts, lowStockVariants, paid, dayCount, weekCount, monthCount, paymentGroups, topSales] =
     await Promise.all([
       prisma.order.findMany({
         orderBy: { createdAt: "desc" },
@@ -33,11 +33,45 @@ export default async function AdminDashboard() {
         include: { customer: true },
       }),
       prisma.product.count({ where: { status: "active" } }),
-      prisma.product.findMany({
-        where: { status: "active", stock: { lte: 5 } },
-        take: 8,
-        orderBy: { stock: "asc" },
-      }),
+      // Alertes stock faible : produits sans variantes (stock produit)
+      // + variantes (stock par variante : taille/type).
+      prisma.product
+        .findMany({
+          where: { status: "active", stock: { lte: 5 }, variants: { none: {} } },
+          orderBy: { stock: "asc" },
+          select: { id: true, name: true, stock: true },
+        })
+        .then((ps) =>
+          ps.map((p) => ({
+            key: `p-${p.id}`,
+            href: `/admin/produits/${p.id}`,
+            name: p.name,
+            stock: p.stock,
+          }))
+        ),
+      prisma.variant
+        .findMany({
+          where: { stock: { lte: 5 }, product: { status: "active" } },
+          orderBy: { stock: "asc" },
+          select: {
+            id: true,
+            name: true,
+            type: true,
+            stock: true,
+            product: { select: { id: true, name: true } },
+          },
+        })
+        .then((vs) =>
+          vs.map((v) => {
+            const vLabel = v.type?.trim() ? `${v.type.trim()}, ${v.name}` : v.name;
+            return {
+              key: `v-${v.id}`,
+              href: `/admin/produits/${v.product.id}`,
+              name: `${v.product.name} — ${vLabel}`,
+              stock: v.stock,
+            };
+          })
+        ),
       prisma.order.aggregate({
         where: { paymentStatus: "paid" },
         _sum: { totalUSD: true, totalEUR: true },
@@ -68,6 +102,11 @@ export default async function AdminDashboard() {
     name: topById.get(t.productId) ?? "Produit supprimé",
     qty: t._sum.quantity ?? 0,
   }));
+
+  // Fusion des deux niveaux d'alerte stock, triés par stock croissant.
+  const lowStock = [...lowStockProducts, ...lowStockVariants]
+    .sort((a, b) => a.stock - b.stock)
+    .slice(0, 8);
 
   const cards = [
     { label: "Chiffre d'affaires (payé)", value: `${formatUSD(paid._sum.totalUSD ?? 0)} / ${formatEUR(paid._sum.totalEUR ?? 0)}` },
@@ -130,7 +169,7 @@ export default async function AdminDashboard() {
           <div className="mt-3 space-y-2">
             {lowStock.length === 0 && <p className="text-sm text-neutral-500">Aucune alerte.</p>}
             {lowStock.map((p) => (
-              <a key={p.id} href={`/admin/produits/${p.id}`} className="block rounded-xl bg-white p-4 shadow-sm hover:shadow">
+              <a key={p.key} href={p.href} className="block rounded-xl bg-white p-4 shadow-sm hover:shadow">
                 <div className="flex justify-between text-sm">
                   <span className="font-bold">{p.name}</span>
                   <span className={`font-extrabold ${p.stock === 0 ? "text-red-600" : "text-amber-600"}`}>
