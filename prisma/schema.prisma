@@ -127,3 +127,14 @@ model Setting {
   key   String @id
   value String
 }
+
+// Statuts de commande configurables depuis le backoffice (kanban).
+model OrderStatus {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  label     String
+  color     String   @default("#64748b")
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

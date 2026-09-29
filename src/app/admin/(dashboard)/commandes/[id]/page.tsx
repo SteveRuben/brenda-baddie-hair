@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { formatUSD, formatEUR } from "@/lib/format";
+import { getOrderStatuses } from "@/lib/orderStatuses";
 import OrderStatusForm from "@/components/OrderStatusForm";
 
 export const dynamic = "force-dynamic";
@@ -12,6 +13,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
     include: { items: true, customer: true },
   });
   if (!order) notFound();
+  const statuses = await getOrderStatuses();
 
   return (
     <div className="max-w-3xl">
@@ -79,6 +81,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
           status={order.status}
           carrier={order.carrier ?? ""}
           trackingNumber={order.trackingNumber ?? ""}
+          statuses={statuses}
         />
       </div>
     </div>

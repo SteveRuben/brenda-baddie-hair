@@ -2,25 +2,20 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
-const STATUSES = [
-  { value: "pending", label: "En attente" },
-  { value: "confirmed", label: "Confirmée" },
-  { value: "shipped", label: "Expédiée" },
-  { value: "delivered", label: "Livrée" },
-  { value: "cancelled", label: "Annulée" },
-];
+import type { OrderStatusInfo } from "@/lib/orderStatuses";
 
 export default function OrderStatusForm({
   orderId,
   status,
   carrier,
   trackingNumber,
+  statuses,
 }: {
   orderId: string;
   status: string;
   carrier: string;
   trackingNumber: string;
+  statuses: OrderStatusInfo[];
 }) {
   const router = useRouter();
   const [form, setForm] = useState({ status, carrier, trackingNumber });
@@ -57,11 +52,14 @@ export default function OrderStatusForm({
           value={form.status}
           onChange={(e) => setForm({ ...form, status: e.target.value })}
         >
-          {STATUSES.map((s) => (
-            <option key={s.value} value={s.value}>
+          {statuses.map((s) => (
+            <option key={s.key} value={s.key}>
               {s.label}
             </option>
           ))}
+          {!statuses.some((s) => s.key === form.status) && (
+            <option value={form.status}>{form.status}</option>
+          )}
         </select>
       </label>
       <div className="grid gap-3 md:grid-cols-2">

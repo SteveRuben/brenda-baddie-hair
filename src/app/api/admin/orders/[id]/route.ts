@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireStaff } from "@/lib/security";
 import { prisma } from "@/lib/prisma";
+import { isValidOrderStatusKey } from "@/lib/orderStatuses";
 
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   if (!(await requireStaff()).ok)
@@ -8,6 +9,10 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
   const { id } = await params;
   try {
     const data = await req.json();
+    if (data.status !== undefined && data.status !== null) {
+      const ok = await isValidOrderStatusKey(String(data.status));
+      if (!ok) return NextResponse.json({ error: "Statut inconnu." }, { status: 400 });
+    }
     const order = await prisma.order.update({
       where: { id },
       data: {

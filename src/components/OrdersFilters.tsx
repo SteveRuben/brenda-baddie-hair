@@ -4,11 +4,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 const STATUS_OPTIONS = [
   { value: "", label: "Tous statuts" },
-  { value: "pending", label: "En attente" },
-  { value: "confirmed", label: "Confirmée" },
-  { value: "shipped", label: "Expédiée" },
-  { value: "delivered", label: "Livrée" },
-  { value: "cancelled", label: "Annulée" },
 ];
 
 const PAYMENT_OPTIONS = [
@@ -19,7 +14,13 @@ const PAYMENT_OPTIONS = [
   { value: "refunded", label: "Remboursé" },
 ];
 
-export default function OrdersFilters({ current }: { current: Record<string, string | undefined> }) {
+export default function OrdersFilters({
+  current,
+  statusOptions,
+}: {
+  current: Record<string, string | undefined>;
+  statusOptions: { value: string; label: string }[];
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -48,7 +49,7 @@ export default function OrdersFilters({ current }: { current: Record<string, str
         className={inputCls}
         onChange={(e) => update("status", e.target.value)}
       >
-        {STATUS_OPTIONS.map((o) => (
+        {[...STATUS_OPTIONS, ...statusOptions].map((o) => (
           <option key={o.value} value={o.value}>
             {o.label}
           </option>
