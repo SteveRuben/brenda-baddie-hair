@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { capturePaypalOrder, paypalConfigured } from "@/lib/paypal";
-import { sendOrderConfirmation } from "@/lib/mail";
-import { getSetting } from "@/lib/settings";
+import { fulfillOrder } from "@/lib/fulfillOrder";
 import { isSameOrigin, rateLimit, rateLimitKey } from "@/lib/security";
 
 function capturedAmountUSD(capture: unknown): number | null {
@@ -66,60 +65,12 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Montant du paiement incorrect." }, { status: 400 });
       }
 
-      // Décrément atomique du stock avec garde anti-survente :
-      // si le stock est insuffisant au moment du paiement, la commande échoue
-      // proprement au lieu de passer en stock négatif.
-      await prisma.$transaction(async (tx) => {
-        await tx.order.update({
-          where: { id: orderId },
-          data: { paymentStatus: "paid", status: "confirmed" },
-        });
-        for (const item of order.items) {
-          // Décrément atomique avec garde anti-survente, au niveau fin :
-          // la variante quand l'article en a une, sinon le produit.
-          if (item.variantId) {
-            const r = await tx.variant.updateMany({
-              where: { id: item.variantId, stock: { gte: item.quantity } },
-              data: { stock: { decrement: item.quantity } },
-            });
-            if (r.count === 0) {
-              throw new Error(`Stock insuffisant pour ${item.name}`);
-            }
-          } else {
-            const r = await tx.product.updateMany({
-              where: { id: item.productId, stock: { gte: item.quantity } },
-              data: { stock: { decrement: item.quantity } },
-            });
-            if (r.count === 0) {
-              throw new Error(`Stock insuffisant pour ${item.name}`);
-            }
-          }
-        }
-      });
-
-      // Email de confirmation (non bloquant)
-      const siteName = await getSetting("siteName");
-      sendOrderConfirmation({
-        number: order.number,
-        firstName: order.customer.firstName,
-        lastName: order.customer.lastName,
-        email: order.customer.email,
-        items: order.items.map((i) => ({
-          name: i.name,
-          quantity: i.quantity,
-          priceUSD: i.priceUSD,
-          priceEUR: i.priceEUR,
-        })),
-        subtotalUSD: order.subtotalUSD,
-        subtotalEUR: order.subtotalEUR,
-        shippingUSD: order.shippingUSD,
-        shippingEUR: order.shippingEUR,
-        totalUSD: order.totalUSD,
-        totalEUR: order.totalEUR,
-        siteName,
-      }).catch((e) => console.error("[mail]", e));
-
-      return NextResponse.json({ number: order.number });
+      // Finalisation partagée (réclamation idempotente, stock, email).
+      const fulfilled = await fulfillOrder(orderId);
+      if (!fulfilled.ok) {
+        return NextResponse.json({ error: `Paiement reçu mais finalisation impossible : ${fulfilled.reason}` }, { status: 500 });
+      }
+      return NextResponse.json({ number: fulfilled.number });
     }
 
     await prisma.order.update({

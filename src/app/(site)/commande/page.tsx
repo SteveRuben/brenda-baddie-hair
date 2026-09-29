@@ -7,6 +7,11 @@ import { useCurrency } from "@/lib/currency";
 
 const PAYPAL_CLIENT_ID = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID ?? "";
 
+interface PaymentMethod {
+  key: string;
+  label: string;
+}
+
 export default function CheckoutPage() {
   const { items, subtotalUSD, subtotalEUR, clear } = useCart();
   const { format } = useCurrency();
@@ -14,7 +19,10 @@ export default function CheckoutPage() {
   const paypalRef = useRef<HTMLDivElement>(null);
   const [orderId, setOrderId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [paying, setPaying] = useState(false);
   const [error, setError] = useState("");
+  const [methods, setMethods] = useState<PaymentMethod[]>([]);
+  const [method, setMethod] = useState<string | null>(null);
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -29,6 +37,20 @@ export default function CheckoutPage() {
   const [shipping, setShipping] = useState({ usd: 0, eur: 0 });
 
   useEffect(() => {
+    // Retour d'un abandon Stripe : on reprend la commande existante
+    // au lieu d'en recréer une en double.
+    const params = new URLSearchParams(window.location.search);
+    const resumed = params.get("orderId");
+    if (resumed) setOrderId(resumed);
+    // Moyens de paiement activés (registre côté serveur)
+    fetch("/api/public/payments")
+      .then((r) => r.json())
+      .then((d) => {
+        const list = (d.methods ?? []) as PaymentMethod[];
+        setMethods(list);
+        if (list.length === 1) setMethod(list[0].key);
+      })
+      .catch(() => {});
     fetch("/api/public/settings")
       .then((r) => r.json())
       .then((d) => setShipping({ usd: d.shippingFeeUSD ?? 0, eur: d.shippingFeeEUR ?? 0 }))
@@ -86,8 +108,32 @@ export default function CheckoutPage() {
     }
   }
 
+  async function payWithStripe() {
+    if (!orderId) return;
+    setPaying(true);
+    setError("");
+    try {
+      const res = await fetch("/api/stripe/checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Stripe indisponible.");
+      if (data.alreadyPaid) {
+        clear();
+        router.push(`/confirmation/${data.number}`);
+        return;
+      }
+      window.location.href = data.url as string;
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Erreur inconnue.");
+      setPaying(false);
+    }
+  }
+
   useEffect(() => {
-    if (!orderId || !PAYPAL_CLIENT_ID || !paypalRef.current) return;
+    if (!orderId || method !== "paypal" || !PAYPAL_CLIENT_ID || !paypalRef.current) return;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const w = window as any;
     if (!w.paypal) {
@@ -134,7 +180,7 @@ export default function CheckoutPage() {
         .render(paypalRef.current);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orderId]);
+  }, [orderId, method]);
 
   useEffect(() => {
     if (items.length === 0 && !orderId) router.push("/panier");
@@ -208,17 +254,58 @@ export default function CheckoutPage() {
         </div>
       ) : (
         <div className="mt-6 max-w-md">
-          <h2 className="font-bold">Paiement sécurisé via PayPal</h2>
+          <h2 className="font-bold">Paiement sécurisé</h2>
           <p className="mt-1 text-sm text-neutral-500">
             Total à payer : {format(totalUSD, totalEUR)}
           </p>
-          {!PAYPAL_CLIENT_ID && (
+          {methods.length > 1 && (
+            <div className="mt-4 space-y-2">
+              {methods.map((m) => (
+                <label
+                  key={m.key}
+                  className={`flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-sm font-semibold ${
+                    method === m.key
+                      ? "border-ink-950 bg-ink-50"
+                      : "border-neutral-200 hover:border-neutral-400"
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="payment-method"
+                    className="h-4 w-4 accent-neutral-950"
+                    checked={method === m.key}
+                    onChange={() => setMethod(m.key)}
+                  />
+                  {m.label}
+                </label>
+              ))}
+            </div>
+          )}
+          {methods.length === 0 && (
             <p className="mt-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-800">
               Le paiement en ligne n'est pas encore configuré. Votre commande est enregistrée, nous
               vous contacterons pour le règlement.
             </p>
           )}
-          <div ref={paypalRef} className="mt-4" />
+          {method === "paypal" && (
+            <>
+              {!PAYPAL_CLIENT_ID && (
+                <p className="mt-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-800">
+                  Le paiement PayPal n'est pas configuré pour le moment.
+                </p>
+              )}
+              <div ref={paypalRef} className="mt-4" />
+            </>
+          )}
+          {method === "stripe" && (
+            <button
+              onClick={payWithStripe}
+              disabled={paying}
+              className="mt-4 w-full rounded-full bg-ink-950 py-3 font-bold text-white hover:bg-ink-800 disabled:bg-neutral-300"
+            >
+              {paying ? "Redirection vers Stripe…" : "Payer par carte"}
+            </button>
+          )}
         </div>
       )}
     </div>
