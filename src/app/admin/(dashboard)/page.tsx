@@ -1,5 +1,13 @@
 import { prisma } from "@/lib/prisma";
 import { formatUSD, formatEUR } from "@/lib/format";
+import {
+  Banknote,
+  BadgeCheck,
+  Package,
+  CalendarDays,
+  CalendarRange,
+  Calendar,
+} from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -109,12 +117,12 @@ export default async function AdminDashboard() {
     .slice(0, 8);
 
   const cards = [
-    { label: "Chiffre d'affaires (payé)", value: `${formatUSD(paid._sum.totalUSD ?? 0)} / ${formatEUR(paid._sum.totalEUR ?? 0)}` },
-    { label: "Commandes payées", value: String(paid._count) },
-    { label: "Produits actifs", value: String(productCount) },
-    { label: "Commandes aujourd'hui", value: String(dayCount) },
-    { label: "Commandes cette semaine", value: String(weekCount) },
-    { label: "Commandes ce mois", value: String(monthCount) },
+    { label: "Chiffre d'affaires (payé)", value: `${formatUSD(paid._sum.totalUSD ?? 0)} / ${formatEUR(paid._sum.totalEUR ?? 0)}`, icon: Banknote },
+    { label: "Commandes payées", value: String(paid._count), icon: BadgeCheck },
+    { label: "Produits actifs", value: String(productCount), icon: Package },
+    { label: "Commandes aujourd'hui", value: String(dayCount), icon: CalendarDays },
+    { label: "Commandes cette semaine", value: String(weekCount), icon: CalendarRange },
+    { label: "Commandes ce mois", value: String(monthCount), icon: Calendar },
   ];
 
   return (
@@ -137,13 +145,24 @@ export default async function AdminDashboard() {
         </div>
       </div>
 
-      <div className="mt-6 grid gap-4 md:grid-cols-3">
-        {cards.map((c) => (
-          <div key={c.label} className="rounded-2xl bg-white p-6 shadow-sm">
-            <p className="text-sm text-neutral-500">{c.label}</p>
-            <p className="mt-1 text-xl font-extrabold text-brand-700">{c.value}</p>
-          </div>
-        ))}
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        {cards.map((c) => {
+          const Icon = c.icon;
+          return (
+            <div
+              key={c.label}
+              className="flex items-start gap-4 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-neutral-100"
+            >
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
+                <Icon className="h-5 w-5" />
+              </span>
+              <span className="min-w-0">
+                <p className="text-sm text-neutral-500">{c.label}</p>
+                <p className="mt-0.5 truncate text-xl font-extrabold text-neutral-900">{c.value}</p>
+              </span>
+            </div>
+          );
+        })}
       </div>
 
       <div className="mt-8 grid gap-8 md:grid-cols-2">
